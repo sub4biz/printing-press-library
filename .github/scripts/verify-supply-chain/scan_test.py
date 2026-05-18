@@ -196,6 +196,98 @@ class WorkflowTrustSignalTest(unittest.TestCase):
         self.assertEqual(len(findings), 1)
         self.assertTrue(findings[0].is_block())
 
+    def test_block_scalar_folded_ref_blocks(self) -> None:
+        """Greptile-flagged bypass: YAML folded block-scalar `ref: >-` with
+        the dangerous expression on the next line evades single-line regex
+        but is semantically identical. Structural YAML parsing catches it."""
+        wf = (
+            "on:\n  pull_request_target:\n"
+            "jobs:\n  x:\n    steps:\n"
+            "      - uses: actions/checkout@v4\n"
+            "        with:\n"
+            "          ref: >-\n"
+            "            ${{ github.event.pull_request.head.sha }}\n"
+        )
+        findings = signals.signal_workflow_trust(_fc(".github/workflows/bad.yml", head=wf))
+        self.assertEqual(len(findings), 1)
+        self.assertTrue(findings[0].is_block())
+
+    def test_block_scalar_literal_ref_blocks(self) -> None:
+        """Literal block-scalar form `|-` same as folded — must also block."""
+        wf = (
+            "on:\n  pull_request_target:\n"
+            "jobs:\n  x:\n    steps:\n"
+            "      - uses: actions/checkout@v4\n"
+            "        with:\n"
+            "          ref: |-\n"
+            "            refs/pull/123/merge\n"
+        )
+        findings = signals.signal_workflow_trust(_fc(".github/workflows/bad.yml", head=wf))
+        self.assertEqual(len(findings), 1)
+
+    def test_github_head_ref_shorthand_blocks(self) -> None:
+        """Greptile-flagged: github.head_ref is the shorthand alias for
+        event.pull_request.head.ref and resolves to PR-author-controlled
+        content under pull_request_target. Must block."""
+        wf = (
+            "on:\n  pull_request_target:\n"
+            "jobs:\n  x:\n    steps:\n"
+            "      - uses: actions/checkout@v4\n"
+            "        with:\n"
+            "          ref: ${{ github.head_ref }}\n"
+        )
+        findings = signals.signal_workflow_trust(_fc(".github/workflows/bad.yml", head=wf))
+        self.assertEqual(len(findings), 1)
+        self.assertTrue(findings[0].is_block())
+
+    def test_merge_commit_sha_blocks(self) -> None:
+        """github.event.pull_request.merge_commit_sha points at GitHub's
+        test-merge commit — contains PR-author code merged with base, same
+        elevated-context risk under pull_request_target."""
+        wf = (
+            "on:\n  pull_request_target:\n"
+            "jobs:\n  x:\n    steps:\n"
+            "      - uses: actions/checkout@v4\n"
+            "        with:\n"
+            "          ref: ${{ github.event.pull_request.merge_commit_sha }}\n"
+        )
+        findings = signals.signal_workflow_trust(_fc(".github/workflows/bad.yml", head=wf))
+        self.assertEqual(len(findings), 1)
+
+    def test_write_all_permissions_blocks(self) -> None:
+        """Newly-covered case: `permissions: write-all` grants id-token implicitly.
+        Also assert the finding's line annotation points somewhere — the
+        original needle was the literal "id-token" string, which doesn't appear
+        in a write-all-only workflow, so line silently came out as None."""
+        wf = "permissions: write-all\n"
+        findings = signals.signal_id_token_outside_allowlist(
+            _fc(".github/workflows/bad.yml", head=wf)
+        )
+        self.assertEqual(len(findings), 1)
+        self.assertIsNotNone(findings[0].line)
+
+    def test_job_level_write_all_blocks_with_line(self) -> None:
+        """Greptile-flagged: job-level `permissions: write-all` also implies
+        id-token. The previous needle-selection only inspected workflow-level
+        permissions, leaving job-level write-all with line=None even though
+        _walk_id_token_grants detected it."""
+        wf = (
+            "name: bad\n"
+            "on: push\n"
+            "jobs:\n"
+            "  x:\n"
+            "    runs-on: ubuntu-latest\n"
+            "    permissions: write-all\n"
+            "    steps:\n"
+            "      - run: echo hi\n"
+        )
+        findings = signals.signal_id_token_outside_allowlist(
+            _fc(".github/workflows/bad.yml", head=wf)
+        )
+        self.assertEqual(len(findings), 1)
+        self.assertTrue(findings[0].is_block())
+        self.assertIsNotNone(findings[0].line)
+
 
 class IdTokenSignalTest(unittest.TestCase):
     def test_id_token_in_non_publish_workflow_blocks(self) -> None:
