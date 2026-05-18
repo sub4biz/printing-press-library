@@ -1389,6 +1389,29 @@
       "printer_name": "Mayank Lavania"
     },
     {
+      "name": "numista",
+      "category": "other",
+      "api": "Numista Documentation",
+      "description": "Every Numista catalogue and collection feature, with offline FTS5 search and a monthly-quota tracker no Numista SDK has.",
+      "path": "library/other/numista",
+      "printer": "vinnyp",
+      "printer_name": "Vinny Pasceri",
+      "mcp": {
+        "binary": "numista-pp-mcp",
+        "transports": [
+          "stdio"
+        ],
+        "tool_count": 17,
+        "public_tool_count": 0,
+        "auth_type": "api_key",
+        "env_vars": [
+          "NUMISTA_API_KEY"
+        ],
+        "mcp_ready": "full",
+        "spec_format": "openapi3"
+      }
+    },
+    {
       "name": "nvd",
       "category": "developer-tools",
       "api": "National Vulnerability Database",
