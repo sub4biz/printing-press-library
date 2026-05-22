@@ -805,6 +805,52 @@
       }
     },
     {
+      "name": "blu-ray",
+      "category": "media-and-entertainment",
+      "api": "Blu-ray.com",
+      "description": "The disc-collector's CLI for Blu-ray.com — offline catalog, live deals, and a price-drop watchlist with zero...",
+      "search_terms": [
+        "blu-ray",
+        "Blu-ray.com",
+        "blu-ray-pp-cli",
+        "Blu-ray.com disc database CLI — local catalog, listings, deals, news, and price-drop watchlist for every Blu-ray, 4K, DVD, and digital release.",
+        "Offline FTS5 Search",
+        "search",
+        "Instant offline search across every Blu-ray release in Blu-ray.com's published sitemap (~400k+ entries). Faster than the site's JS-rendered search and works without a network round-trip after one sync.",
+        "Price-Drop Watchlist",
+        "watch check",
+        "Local watchlist of release ids; re-scans Blu-ray.com deals on demand and alerts when any watched disc hits its target price or a new historical low.",
+        "Editions Side-By-Side",
+        "editions",
+        "Given a movie umbrella id, lists every disc edition (4K UHD, Blu-ray, Steelbook, Director's Cut, country variant) with release date, list price, current price, and Blu-ray.com community rating in a single view.",
+        "UPC Import + Resolve",
+        "upc",
+        "Resolves a CSV of UPC codes (e.g. the comma-separated export Blu-ray.com itself produces) back to local release records, hydrating titles, formats, ratings, and current prices.",
+        "Catalog Drift",
+        "drift",
+        "Diffs today's sitemap against the last sync and surfaces 'new in catalog this week', 'removed', and 'metadata changed' so collectors don't miss announcements.",
+        "Price History + Spark Plot",
+        "history",
+        "Shows per-retailer price history for a release id, captured automatically by watch check + deals --record. Optional inline ASCII spark plot."
+      ],
+      "path": "library/media-and-entertainment/blu-ray",
+      "printer": "vinnyp",
+      "printer_name": "Vinny Pasceri",
+      "mcp": {
+        "binary": "blu-ray-pp-mcp",
+        "transports": [
+          "stdio",
+          "http"
+        ],
+        "tool_count": 11,
+        "public_tool_count": 11,
+        "auth_type": "none",
+        "env_vars": [],
+        "mcp_ready": "full",
+        "spec_format": "internal"
+      }
+    },
+    {
       "name": "booking-com",
       "category": "travel",
       "api": "Booking.com",
