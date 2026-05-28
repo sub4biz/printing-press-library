@@ -311,7 +311,7 @@ func newInboundPlansTransportationCmd(flags *rootFlags) *cobra.Command {
 
 func newInboundPlansPackingGenerateCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{Use: "generate"}
-	return configureInboundAsyncNoBodyCmd(cmd, flags, "Generate packing options.", "POST", "packingOptions", "/inboundPlans/{inboundPlanId}/packingOptions", "", false)
+	return configureInboundAsyncNoBodyCmd(cmd, flags, "Generate packing options.", "packingOptions", "/inboundPlans/{inboundPlanId}/packingOptions", "", false)
 }
 
 func newInboundPlansPackingListCmd(flags *rootFlags) *cobra.Command {
@@ -321,17 +321,17 @@ func newInboundPlansPackingListCmd(flags *rootFlags) *cobra.Command {
 
 func newInboundPlansPackingConfirmCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{Use: "confirm"}
-	return configureInboundAsyncNoBodyCmd(cmd, flags, "Confirm a packing option. Requires --yes.", "POST", "packingOptions.confirm", "/inboundPlans/{inboundPlanId}/packingOptions/{optionId}/confirmation", "option-id", true)
+	return configureInboundAsyncNoBodyCmd(cmd, flags, "Confirm a packing option. Requires --yes.", "packingOptions.confirm", "/inboundPlans/{inboundPlanId}/packingOptions/{optionId}/confirmation", "option-id", true)
 }
 
 func newInboundPlansPackingSetCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{Use: "set"}
-	return configureInboundRawBodyCmd(cmd, flags, "Set carton-level packing information from JSON. Requires --yes.", "POST", "packingInformation", "/inboundPlans/{inboundPlanId}/packingInformation", true)
+	return configureInboundRawBodyCmd(cmd, flags, "Set carton-level packing information from JSON. Requires --yes.", "packingInformation", "/inboundPlans/{inboundPlanId}/packingInformation", true)
 }
 
 func newInboundPlansPlacementGenerateCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{Use: "generate"}
-	return configureInboundRawBodyCmd(cmd, flags, "Generate placement options. Body is optional JSON for customPlacement.", "POST", "placementOptions", "/inboundPlans/{inboundPlanId}/placementOptions", false)
+	return configureInboundRawBodyCmd(cmd, flags, "Generate placement options. Body is optional JSON for customPlacement.", "placementOptions", "/inboundPlans/{inboundPlanId}/placementOptions", false)
 }
 
 func newInboundPlansPlacementListCmd(flags *rootFlags) *cobra.Command {
@@ -341,12 +341,12 @@ func newInboundPlansPlacementListCmd(flags *rootFlags) *cobra.Command {
 
 func newInboundPlansPlacementConfirmCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{Use: "confirm"}
-	return configureInboundAsyncNoBodyCmd(cmd, flags, "Confirm a placement option. Requires --yes.", "POST", "placementOptions.confirm", "/inboundPlans/{inboundPlanId}/placementOptions/{optionId}/confirmation", "option-id", true)
+	return configureInboundAsyncNoBodyCmd(cmd, flags, "Confirm a placement option. Requires --yes.", "placementOptions.confirm", "/inboundPlans/{inboundPlanId}/placementOptions/{optionId}/confirmation", "option-id", true)
 }
 
 func newInboundPlansTransportationGenerateCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{Use: "generate"}
-	return configureInboundRawBodyCmd(cmd, flags, "Generate transportation options from JSON.", "POST", "transportationOptions", "/inboundPlans/{inboundPlanId}/transportationOptions", false)
+	return configureInboundRawBodyCmd(cmd, flags, "Generate transportation options from JSON.", "transportationOptions", "/inboundPlans/{inboundPlanId}/transportationOptions", false)
 }
 
 func newInboundPlansTransportationListCmd(flags *rootFlags) *cobra.Command {
@@ -356,10 +356,10 @@ func newInboundPlansTransportationListCmd(flags *rootFlags) *cobra.Command {
 
 func newInboundPlansTransportationConfirmCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{Use: "confirm"}
-	return configureInboundRawBodyCmd(cmd, flags, "Confirm transportation options from JSON. Requires --yes.", "POST", "transportationOptions.confirm", "/inboundPlans/{inboundPlanId}/transportationOptions/confirmation", true)
+	return configureInboundRawBodyCmd(cmd, flags, "Confirm transportation options from JSON. Requires --yes.", "transportationOptions.confirm", "/inboundPlans/{inboundPlanId}/transportationOptions/confirmation", true)
 }
 
-func configureInboundAsyncNoBodyCmd(cmd *cobra.Command, flags *rootFlags, short, method, endpoint, pathTemplate, optionFlag string, confirm bool) *cobra.Command {
+func configureInboundAsyncNoBodyCmd(cmd *cobra.Command, flags *rootFlags, short, endpoint, pathTemplate, optionFlag string, confirm bool) *cobra.Command {
 	var inboundPlanID string
 	var optionID string
 	var wait bool
@@ -367,7 +367,7 @@ func configureInboundAsyncNoBodyCmd(cmd *cobra.Command, flags *rootFlags, short,
 	cmd.Short = short
 	cmd.Annotations = map[string]string{
 		"pp:endpoint": "inbound-plans." + endpoint,
-		"pp:method":   method,
+		"pp:method":   "POST",
 		"pp:path":     inboundPlansBasePath + pathTemplate,
 	}
 	cmd.RunE = func(cmd *cobra.Command, args []string) error {
@@ -414,7 +414,7 @@ func configureInboundAsyncNoBodyCmd(cmd *cobra.Command, flags *rootFlags, short,
 	return cmd
 }
 
-func configureInboundRawBodyCmd(cmd *cobra.Command, flags *rootFlags, short, method, endpoint, pathTemplate string, confirm bool) *cobra.Command {
+func configureInboundRawBodyCmd(cmd *cobra.Command, flags *rootFlags, short, endpoint, pathTemplate string, confirm bool) *cobra.Command {
 	var inboundPlanID string
 	var bodyFile string
 	var stdinBody bool
@@ -423,7 +423,7 @@ func configureInboundRawBodyCmd(cmd *cobra.Command, flags *rootFlags, short, met
 	cmd.Short = short
 	cmd.Annotations = map[string]string{
 		"pp:endpoint": "inbound-plans." + endpoint,
-		"pp:method":   method,
+		"pp:method":   "POST",
 		"pp:path":     inboundPlansBasePath + pathTemplate,
 	}
 	cmd.RunE = func(cmd *cobra.Command, args []string) error {
@@ -442,7 +442,7 @@ func configureInboundRawBodyCmd(cmd *cobra.Command, flags *rootFlags, short, met
 				return err
 			}
 		} else if body != nil && shouldPreviewWrite(flags) {
-			return previewRequestBody(cmd, method, applyInboundPath(pathTemplate, inboundPlanID, ""), body)
+			return previewRequestBody(cmd, "POST", applyInboundPath(pathTemplate, inboundPlanID, ""), body)
 		}
 		c, err := flags.newClient()
 		if err != nil {
@@ -686,21 +686,6 @@ func readOptionalJSONBody(path string, stdinBody bool, stdin io.Reader) (any, er
 		return nil, fmt.Errorf("parsing JSON body: %w", err)
 	}
 	return raw, nil
-}
-
-func decodeJSONReader(r io.Reader, v any) error {
-	_, parsed, err := readRawJSON(r)
-	if err != nil {
-		return err
-	}
-	if v == nil {
-		return nil
-	}
-	b, err := json.Marshal(parsed)
-	if err != nil {
-		return err
-	}
-	return json.Unmarshal(b, v)
 }
 
 func readRawJSONObject(r io.Reader) (json.RawMessage, map[string]any, error) {
