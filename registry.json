@@ -7598,7 +7598,7 @@
         "Use site, website, pages, and store-pages aliases over the generated Commerce API website profile and store pages endpoints."
       ],
       "path": "library/commerce/squarespace",
-      "printer": "zayd",
+      "printer": "zaydiscold",
       "printer_name": "Zayd",
       "mcp": {
         "binary": "squarespace-pp-mcp",
@@ -8910,6 +8910,54 @@
         "env_vars": [],
         "mcp_ready": "full",
         "spec_format": "internal"
+      }
+    },
+    {
+      "name": "wavespeed",
+      "category": "ai",
+      "api": "WaveSpeed",
+      "description": "Docs-derived OpenAPI spec for WaveSpeed AI's REST API.",
+      "search_terms": [
+        "wavespeed",
+        "wavespeed-pp-cli",
+        "Docs-derived OpenAPI spec for WaveSpeed AI's REST API.",
+        "API key from WaveSpeed access key settings",
+        "Dynamic model runner",
+        "run",
+        "Submit WaveSpeed model runs with prompt shorthand, JSON input merging, schema help, price estimates, waiting, downloads, aliases, and local media file upload coercion.",
+        "Dynamic model schema help",
+        "schema",
+        "Fetch the live WaveSpeed model catalog and print api_schema.api_schemas[0].request_schema for a model or project alias.",
+        "Media upload helper",
+        "upload",
+        "Upload local image, video, or audio files to WaveSpeed media storage for use as model input URLs.",
+        "Output downloader",
+        "download",
+        "Download generated output URLs with directory, exact-path, or templated-path destinations.",
+        "Model price estimate",
+        "price",
+        "Estimate WaveSpeed model pricing with the same input syntax used by run, without submitting a prediction.",
+        "Project aliases",
+        "aliases",
+        "Read wavespeed.json aliases, default model, and output directory settings for repeatable local workflows."
+      ],
+      "path": "library/ai/wavespeed",
+      "printer": "cathrynlavery",
+      "printer_name": "Cathryn Lavery",
+      "mcp": {
+        "binary": "wavespeed-pp-mcp",
+        "transports": [
+          "stdio",
+          "http"
+        ],
+        "tool_count": 9,
+        "public_tool_count": 0,
+        "auth_type": "api_key",
+        "env_vars": [
+          "WAVESPEED_API_KEY"
+        ],
+        "mcp_ready": "full",
+        "spec_format": "openapi3"
       }
     },
     {
