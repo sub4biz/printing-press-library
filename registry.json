@@ -360,6 +360,47 @@
       }
     },
     {
+      "name": "alltrails",
+      "category": "travel",
+      "api": "Alltrails Unofficial Seed",
+      "description": "Evidence-labeled, live-capable route map for AllTrails browser/mobile surfaces. Not an official API contract.",
+      "search_terms": [
+        "alltrails",
+        "Alltrails Unofficial Seed",
+        "alltrails-pp-cli",
+        "Evidence-labeled, live-capable route map for AllTrails browser/mobile surfaces. Not an official API contract.",
+        "Authenticated AllTrails browser and mobile route atlas",
+        "alltrails list",
+        "Expose evidence-labeled AllTrails trail, map, activity, account, community, and user route templates captured from authenticated browser/mobile surfaces rather than relying on a public API contract.",
+        "PP-gated AllTrails live-write planner",
+        "alltrails create",
+        "Model account-changing AllTrails requests with default dry-run behavior, explicit risk labels, and the ALLTRAILS_PP_ALLOW_WRITES=1 barrier before any PP-side live mutation.",
+        "Agent-readable AllTrails risk and auth surface",
+        "agent-context",
+        "Publish bearer/cookie auth requirements, MCP read/write risk metadata, and route annotations so agents can distinguish safe reads from live account mutations."
+      ],
+      "path": "library/travel/alltrails",
+      "printer": "zaydiscold",
+      "printer_name": "zaydiscold",
+      "mcp": {
+        "binary": "alltrails-pp-mcp",
+        "transports": [
+          "stdio",
+          "http"
+        ],
+        "tool_count": 9,
+        "public_tool_count": 9,
+        "auth_type": "bearer_or_cookie",
+        "env_vars": [
+          "ALLTRAILS_ACCESS_TOKEN",
+          "ALLTRAILS_COOKIE",
+          "ALLTRAILS_CSRF_TOKEN"
+        ],
+        "mcp_ready": "full",
+        "spec_format": "openapi3"
+      }
+    },
+    {
       "name": "amazon-orders",
       "category": "commerce",
       "api": "Amazon Orders",
