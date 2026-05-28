@@ -185,6 +185,8 @@ Run 'amazon-seller-pp-cli doctor' to verify auth and connectivity.`,
 	rootCmd.AddCommand(newAPICmd(flags))
 	rootCmd.AddCommand(newFbaInventoryPromotedCmd(flags))
 	rootCmd.AddCommand(newSellersPromotedCmd(flags))
+	// PATCH: add Fulfillment Inbound v2024-03-20 inbound plans workflow.
+	rootCmd.AddCommand(newInboundPlansCmd(flags))
 	// PATCH: add novel computed report command groups.
 	rootCmd.AddCommand(newProfitabilityCmd(flags))
 	rootCmd.AddCommand(newInventoryIntelCmd(flags))

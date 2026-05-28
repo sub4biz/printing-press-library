@@ -38,6 +38,13 @@ var whichIndex = []whichEntry{
 	{Command: "reports document", Description: "Get report document metadata and the presigned download URL. This command does not download or open the document.", Group: "reports"},
 	{Command: "reports get", Description: "Get one report by report ID. This is the manual polling endpoint for report processing status.", Group: "reports"},
 	{Command: "reports list", Description: "List reports. If nextToken is set, Amazon requires it to be the only query parameter; pass no other filters with nextToken.", Group: "reports"},
+	// PATCH: Advertise custom Fulfillment Inbound workflow entry points in `which` discovery.
+	{Command: "inbound-plans create", Description: "Create an FBA inbound plan from raw JSON or source address plus item CSV/JSON.", Group: "inbound-plans"},
+	{Command: "inbound-plans status", Description: "Get or wait for an asynchronous Fulfillment Inbound operation status.", Group: "inbound-plans"},
+	{Command: "inbound-plans list", Description: "List inbound plans.", Group: "inbound-plans"},
+	{Command: "inbound-plans packing confirm", Description: "Confirm a packing option for an inbound plan.", Group: "inbound-plans"},
+	{Command: "inbound-plans placement confirm", Description: "Confirm a placement option before switching to Send to Amazon.", Group: "inbound-plans"},
+	{Command: "inbound-plans transportation confirm", Description: "Confirm transportation options before switching to Send to Amazon.", Group: "inbound-plans"},
 	{Command: "sellers marketplaces", Description: "List marketplace participations for the authorized seller account.", Group: "sellers"},
 }
 
