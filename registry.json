@@ -846,6 +846,42 @@
       }
     },
     {
+      "name": "ars-sicilia",
+      "category": "other",
+      "api": "ars-sicilia",
+      "description": "L'unica CLI per il portale dell'Assemblea Regionale Siciliana: cerca",
+      "search_terms": [
+        "ars-sicilia",
+        "ars-sicilia-pp-cli",
+        "Iter completo di un DDL",
+        "ddl iter",
+        "Ricostruisce la cronologia completa di un disegno di legge: presentazione, passaggio in commissione, lavori d'aula, eventuale promulgazione come legge regionale.",
+        "Profilo deputato cross-archive",
+        "deputato profilo",
+        "Aggrega in un'unica vista tutti gli atti firmati o pronunciati da un deputato: DDL, interrogazioni, interpellanze, mozioni, ordini del giorno, risoluzioni e interventi in resoconti d'aula.",
+        "Coppie di co-firmatari",
+        "analytics",
+        "Identifica i deputati che firmano insieme atti parlamentari, restituendo coppie e cluster con conteggio per analisi di network politico.",
+        "Oratori più attivi in aula",
+        "Classifica i deputati per numero di interventi nei resoconti d'aula, con range date e legislatura, opzionale conteggio parole.",
+        "Dossier 360° di una commissione",
+        "commissione dossier",
+        "Vista completa su una commissione: convocazioni in calendario, sommari lavori, DDL assegnati e pareri richiesti al Governo regionale.",
+        "Drift iter DDL",
+        "ddl drift",
+        "Confronta lo stato dell'iter dei DDL nella sync corrente con la precedente e segnala i disegni di legge che si sono mossi nel periodo (passati da commissione ad aula, approvati, ritirati).",
+        "Stato sync archivi",
+        "sync stale",
+        "Mostra per ognuno dei 12 archivi ARS: timestamp ultima sync, n. record locali, età della sync, eventuale segnalazione di staleness.",
+        "Cronologia inversa di una legge",
+        "legge cronologia",
+        "Partendo da una legge regionale promulgata (archivio 201), risale al DDL originario, agli emendamenti citati nei resoconti d'aula e ai pareri di commissione: l'inverso temporale di ddl iter."
+      ],
+      "path": "library/other/ars-sicilia",
+      "printer": "aborruso",
+      "printer_name": "aborruso"
+    },
+    {
       "name": "art-goat",
       "category": "media-and-entertainment",
       "api": "Art Goat",
@@ -3756,6 +3792,44 @@
       }
     },
     {
+      "name": "goodreads",
+      "category": "media-and-entertainment",
+      "api": "Goodreads",
+      "description": "This is an evidence-backed starting map for a future Goodreads CLI.",
+      "search_terms": [
+        "goodreads",
+        "goodreads-pp-cli",
+        "Agent-native CLI + MCP for Goodreads, read and write. Rate books via the modern AppSync GraphQL API (RateBook/UnrateBook), write reviews with spoiler + feed-publicize via the legacy form, add to and create shelves, browse the home updates feed, friends, recommendations, genre/topic search, book pages, and Goodreads Giveaways. Goodreads has no public developer API; routes are reverse-engineered from the logged-in web app and live-verified.",
+        "Goodreads authenticated web route atlas",
+        "api",
+        "Expose an evidence-backed Goodreads route map covering shelves, books, reviews, messages, notes, quotes, friends, genres, recommendations, notifications, and public sitemap-derived hubs despite the absence of a current public Goodreads API.",
+        "Compact Goodreads MCP search and execute surface",
+        "goodreads_search",
+        "Default MCP registration uses goodreads_search plus goodreads_execute for route discovery and dispatch instead of flooding agents with dozens of raw endpoint mirrors.",
+        "Approval-gated notes and shelf mutation support",
+        "notes share update",
+        "Model real Goodreads account actions such as Kindle note publicizing, shelf edits, message marks, and review updates with dry-run previews and the GOODREADS_PP_ALLOW_WRITES=1 gate before PP-side live writes."
+      ],
+      "path": "library/media-and-entertainment/goodreads",
+      "printer": "zaydiscold",
+      "printer_name": "zaydiscold",
+      "mcp": {
+        "binary": "goodreads-pp-mcp",
+        "transports": [
+          "stdio",
+          "http"
+        ],
+        "tool_count": 55,
+        "public_tool_count": 0,
+        "auth_type": "api_key",
+        "env_vars": [
+          "GOODREADS_GOODREADS_COOKIE_SESSION"
+        ],
+        "mcp_ready": "full",
+        "spec_format": "openapi3"
+      }
+    },
+    {
       "name": "google-ads",
       "category": "marketing",
       "api": "Google Ads",
@@ -5186,6 +5260,60 @@
         "auth_type": "bearer_token",
         "env_vars": [
           "MERCURY_BEARER_AUTH"
+        ],
+        "mcp_ready": "full",
+        "spec_format": "openapi3"
+      }
+    },
+    {
+      "name": "meta-ads",
+      "category": "marketing",
+      "api": "Meta Ads",
+      "description": "The first agent-native Meta Ads CLI with local SQLite history and compound queries the live API cannot answer.",
+      "search_terms": [
+        "meta-ads",
+        "Meta Ads",
+        "meta-ads-pp-cli",
+        "The first agent-native Meta Ads CLI with local SQLite history and compound queries the live API cannot answer.",
+        "Creative-Fatigue Observatory",
+        "fatigue",
+        "Detect ads whose CPM is drifting up, frequency is climbing, and CTR is falling across a configurable window.",
+        "Creative Decay Curve",
+        "decay",
+        "Compare a creative's first-impression CTR against its current CTR, with projected dead-date.",
+        "Audience Overlap Cartographer",
+        "overlap",
+        "Pairwise overlap percentages across custom audiences, with cannibalization recommendations.",
+        "Learning-Phase Forensics",
+        "learning",
+        "Surface adsets stuck in algorithmic learning >N days with root-cause hint (budget too low, audience too narrow, events too sparse).",
+        "Spend Reconciliation",
+        "reconcile",
+        "Per-day diff between Meta-reported account spend and sum-of-insights spend; flags days where attribution drift exceeds threshold.",
+        "Bottleneck Surfacer",
+        "bottleneck",
+        "Highest-spend adsets with worst ROAS, ranked with 'why' column joining learning state and effective status.",
+        "Stale Active Ads",
+        "stale",
+        "Active ads with zero impressions in N days.",
+        "Account Inventory Roll-up",
+        "inventory",
+        "Group every ad in an account by effective_status, surface ads where configured status='ACTIVE' but effective_status='WITH_ISSUES' or 'DISAPPROVED'."
+      ],
+      "path": "library/marketing/meta-ads",
+      "printer": "sdhilip200",
+      "printer_name": "Dhilip Subramanian",
+      "mcp": {
+        "binary": "meta-ads-pp-mcp",
+        "transports": [
+          "stdio",
+          "http"
+        ],
+        "tool_count": 11,
+        "public_tool_count": 0,
+        "auth_type": "bearer_token",
+        "env_vars": [
+          "META_ACCESS_TOKEN"
         ],
         "mcp_ready": "full",
         "spec_format": "openapi3"
