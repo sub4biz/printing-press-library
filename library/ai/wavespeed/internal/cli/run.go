@@ -79,7 +79,7 @@ func newRunCmd(flags *rootFlags) *cobra.Command {
 		Example: `  wavespeed-pp-cli run wavespeed-ai/flux-dev -p "a studio product photo" --wait
   wavespeed-pp-cli run hero -i size=1024 -i enable_base64_output=false --price --wait --download ./outputs/{index}.{ext}
   wavespeed-pp-cli run --model-id wavespeed-ai/flux-dev --prompt "agent-friendly MCP call" --price-only`,
-		Args:        cobra.MaximumNArgs(1),
+		Args:        validateRunArgs(&opts),
 		Annotations: map[string]string{"pp:method": "POST", "pp:path": "/{model_id}"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			project, err := loadWavespeedProjectConfig()
@@ -87,11 +87,16 @@ func newRunCmd(flags *rootFlags) *cobra.Command {
 				return usageErr(err)
 			}
 
+			modelArgs, downloadArg := splitRunArgs(cmd, args, &opts)
+			if downloadArg != "" {
+				opts.download = downloadArg
+			}
+
 			modelToken := ""
 			if cmd.Flags().Changed("model-id") {
 				modelToken = opts.modelID
-			} else if len(args) > 0 {
-				modelToken = args[0]
+			} else if len(modelArgs) > 0 {
+				modelToken = modelArgs[0]
 			} else {
 				modelToken = project.DefaultModel
 			}
@@ -137,8 +142,6 @@ func newRunCmd(flags *rootFlags) *cobra.Command {
 				wait:          opts.wait,
 				waitTimeout:   opts.waitTimeout,
 				pollInitial:   opts.pollInitial,
-				download:      cmd.Flags().Changed("download"),
-				downloadSpec:  runDownloadSpec(opts, project, cmd.Flags().Changed("download-dir")),
 			})
 			if err != nil {
 				return classifyAPIError(err, flags)
@@ -161,12 +164,29 @@ func newRunCmd(flags *rootFlags) *cobra.Command {
 				}
 			}
 
-			output := runOutputEnvelope(res.Pricing, res.Result, res.Downloads)
+			var downloadSpec string
+			var plannedDownloads []downloadedFile
+			if cmd.Flags().Changed("download") {
+				downloadSpec = runDownloadSpec(opts, project, cmd.Flags().Changed("download-dir"))
+				plannedDownloads = planRunDownloads(unwrapWaveSpeedData(res.Result), downloadSpec)
+			}
+
+			output := runOutputEnvelope(res.Pricing, res.Result, plannedDownloads)
 			if err := printOutputWithFlags(cmd.OutOrStdout(), output, flags); err != nil {
 				return err
 			}
 			if res.Failed {
 				return apiErr(fmt.Errorf("prediction finished with status %q", res.Status))
+			}
+			if cmd.Flags().Changed("download") {
+				downloads, err := downloadPlannedRunOutputs(cmd.Context(), c, plannedDownloads)
+				for _, item := range downloads {
+					fmt.Fprintf(cmd.ErrOrStderr(), "downloaded %s\n", item.Path)
+				}
+				if err != nil {
+					fmt.Fprintf(cmd.ErrOrStderr(), "warning: download failed: %v\n", err)
+					return nil
+				}
 			}
 			return nil
 		},
@@ -189,6 +209,40 @@ func newRunCmd(flags *rootFlags) *cobra.Command {
 	installRunModelHelp(cmd, flags, &opts)
 
 	return cmd
+}
+
+func validateRunArgs(opts *runCommandOptions) cobra.PositionalArgs {
+	return func(cmd *cobra.Command, args []string) error {
+		allowed := 1
+		if acceptsDownloadPathArg(cmd, opts) && !cmd.Flags().Changed("model-id") {
+			allowed = 2
+		}
+		if len(args) <= allowed {
+			return nil
+		}
+		extra := args[allowed]
+		if acceptsDownloadPathArg(cmd, opts) {
+			return fmt.Errorf("accepts at most %d arg(s), received %d; unexpected extra arg %q (if this is a download path, pass it immediately after --download or use --download=%s)", allowed, len(args), extra, extra)
+		}
+		return fmt.Errorf("accepts at most %d arg(s), received %d; unexpected extra arg %q", allowed, len(args), extra)
+	}
+}
+
+func splitRunArgs(cmd *cobra.Command, args []string, opts *runCommandOptions) ([]string, string) {
+	if !acceptsDownloadPathArg(cmd, opts) || len(args) == 0 {
+		return args, ""
+	}
+	if cmd.Flags().Changed("model-id") {
+		return nil, args[0]
+	}
+	if len(args) >= 2 {
+		return args[:1], args[1]
+	}
+	return args, ""
+}
+
+func acceptsDownloadPathArg(cmd *cobra.Command, opts *runCommandOptions) bool {
+	return cmd.Flags().Changed("download") && opts.download == "true"
 }
 
 func installRunModelHelp(cmd *cobra.Command, flags *rootFlags, opts *runCommandOptions) {
@@ -1491,18 +1545,19 @@ type downloadedFile struct {
 }
 
 func downloadRunOutputs(ctx context.Context, c *client.Client, data json.RawMessage, spec string) ([]downloadedFile, error) {
-	urls := collectURLStrings(data)
-	if len(urls) == 0 {
-		return nil, nil
-	}
-	if spec == "" || spec == "true" {
-		spec = "."
-	}
-	downloads := make([]downloadedFile, 0, len(urls))
-	for i, rawURL := range urls {
+	return downloadPlannedRunOutputs(ctx, c, planRunDownloads(data, spec))
+}
+
+func downloadPlannedRunOutputs(ctx context.Context, c *client.Client, planned []downloadedFile) ([]downloadedFile, error) {
+	downloads := make([]downloadedFile, 0, len(planned))
+	for _, item := range planned {
+		rawURL := item.URL
 		req, err := http.NewRequestWithContext(ctx, http.MethodGet, rawURL, nil)
 		if err != nil {
 			return downloads, fmt.Errorf("building download request: %w", err)
+		}
+		if err := addDownloadRequestHeaders(ctx, c, req); err != nil {
+			return downloads, err
 		}
 		resp, err := c.DoRaw(req)
 		if err != nil {
@@ -1514,7 +1569,7 @@ func downloadRunOutputs(ctx context.Context, c *client.Client, data json.RawMess
 				err = fmt.Errorf("downloading %s returned HTTP %d", rawURL, resp.StatusCode)
 				return
 			}
-			outPath := downloadOutputPath(spec, rawURL, i, len(urls))
+			outPath := item.Path
 			if err = os.MkdirAll(filepath.Dir(outPath), 0o755); err != nil {
 				err = fmt.Errorf("creating download dir: %w", err)
 				return
@@ -1530,13 +1585,59 @@ func downloadRunOutputs(ctx context.Context, c *client.Client, data json.RawMess
 				err = fmt.Errorf("writing %s: %w", outPath, err)
 				return
 			}
-			downloads = append(downloads, downloadedFile{URL: rawURL, Path: outPath})
+			downloads = append(downloads, item)
 		}()
 		if err != nil {
 			return downloads, err
 		}
 	}
 	return downloads, nil
+}
+
+func planRunDownloads(data json.RawMessage, spec string) []downloadedFile {
+	urls := collectURLStrings(data)
+	if len(urls) == 0 {
+		return nil
+	}
+	if spec == "" || spec == "true" {
+		spec = "."
+	}
+	downloads := make([]downloadedFile, 0, len(urls))
+	for i, rawURL := range urls {
+		downloads = append(downloads, downloadedFile{
+			URL:  rawURL,
+			Path: downloadOutputPath(spec, rawURL, i, len(urls)),
+		})
+	}
+	return downloads
+}
+
+func addDownloadRequestHeaders(ctx context.Context, c *client.Client, req *http.Request) error {
+	if c == nil || c.Config == nil || !sameHost(req.URL, c.BaseURL) {
+		return nil
+	}
+	auth, err := c.AuthHeader(ctx)
+	if err != nil {
+		return err
+	}
+	if auth != "" {
+		req.Header.Set("Authorization", auth)
+	}
+	for k, v := range c.Config.Headers {
+		req.Header.Set(k, v)
+	}
+	return nil
+}
+
+func sameHost(target *url.URL, baseURL string) bool {
+	if target == nil {
+		return false
+	}
+	base, err := url.Parse(baseURL)
+	if err != nil {
+		return false
+	}
+	return strings.EqualFold(target.Host, base.Host)
 }
 
 func downloadOutputPath(spec, rawURL string, index, total int) string {
@@ -1602,8 +1703,17 @@ func collectURLStrings(data json.RawMessage) []string {
 				walk(item)
 			}
 		case map[string]any:
-			for key, item := range typed {
+			keys := make([]string, 0, len(typed))
+			for key := range typed {
+				keys = append(keys, key)
+			}
+			sort.Strings(keys)
+			for _, key := range keys {
+				item := typed[key]
 				if isEchoedInputContainerKey(key) {
+					continue
+				}
+				if isPredictionManagementURL(key, item) {
 					continue
 				}
 				walk(item)
@@ -1621,6 +1731,24 @@ func isEchoedInputContainerKey(key string) bool {
 	default:
 		return false
 	}
+}
+
+func isPredictionManagementURL(key string, item any) bool {
+	switch strings.ToLower(strings.TrimSpace(key)) {
+	case "get", "self", "status", "result", "cancel", "delete":
+	default:
+		return false
+	}
+	rawURL, ok := item.(string)
+	if !ok || !strings.HasPrefix(rawURL, "http") {
+		return false
+	}
+	parsed, err := url.Parse(rawURL)
+	if err != nil {
+		return false
+	}
+	path := strings.ToLower(parsed.Path)
+	return strings.Contains(path, "/predictions/")
 }
 
 func outputFilename(rawURL string, index int) string {
