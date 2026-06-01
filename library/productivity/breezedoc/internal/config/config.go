@@ -183,6 +183,15 @@ func (c *Config) SaveTokens(clientID, clientSecret, accessToken, refreshToken st
 	return c.save()
 }
 
+func (c *Config) SaveAPIToken(apiToken string) error {
+	c.AuthHeaderVal = ""
+	c.AccessToken = ""
+	c.RefreshToken = ""
+	c.TokenExpiry = time.Time{}
+	c.BreezedocApiToken = apiToken
+	return c.save()
+}
+
 func (c *Config) ClearTokens() error {
 	// AuthHeader() falls back to the env-var-derived fields when AuthHeaderVal
 	// and AccessToken are empty, so dropping the working credential requires

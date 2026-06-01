@@ -151,8 +151,7 @@ func newAuthSetTokenCmd(flags *rootFlags) *cobra.Command {
 			// token and set-token silently has no effect. Silent clear (no
 			// log line): a masked-tail variant could leak token bytes through
 			// scripted dogfood that captures stderr.
-			cfg.AuthHeaderVal = ""
-			if err := cfg.SaveTokens("", "", args[0], "", cfg.TokenExpiry); err != nil {
+			if err := cfg.SaveAPIToken(args[0]); err != nil {
 				return configErr(fmt.Errorf("saving token: %w", err))
 			}
 

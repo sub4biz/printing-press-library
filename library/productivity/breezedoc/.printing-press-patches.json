@@ -23,6 +23,17 @@
         "internal/config/config.go"
       ],
       "validated_outcome": "doctor --json reported credentials valid and live client-workspace-snapshot returned account counts from https://breezedoc.com/api/*."
+    },
+    {
+      "id": "breezedoc-auth-and-cache-hardening",
+      "summary": "Hardened response cache permissions and made auth set-token persist to the BreezeDoc API token field.",
+      "reason": "Cached API responses can contain sensitive document, invoice, and recipient data; saved tokens should also land in the same api_token config field advertised by the auth setup flow.",
+      "files": [
+        "internal/client/client.go",
+        "internal/config/config.go",
+        "internal/cli/auth.go"
+      ],
+      "validated_outcome": "go test ./... passed; go build ./... passed; auth set-token wrote api_token; public-library package, skill, supply-chain, and govulncheck verifiers passed."
     }
   ]
 }
