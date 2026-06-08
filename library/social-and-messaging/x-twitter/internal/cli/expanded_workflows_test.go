@@ -222,6 +222,16 @@ func TestFilterRecordsSince(t *testing.T) {
 	}
 }
 
+func TestSinceStartTimeParsesRFC3339WithoutLowercasing(t *testing.T) {
+	start, ok, err := sinceStartTime("2024-06-01T12:00:00Z")
+	if err != nil {
+		t.Fatalf("sinceStartTime returned error: %v", err)
+	}
+	if !ok || start.Format("2006-01-02T15:04:05Z07:00") != "2024-06-01T12:00:00Z" {
+		t.Fatalf("start=%s ok=%v", start.Format("2006-01-02T15:04:05Z07:00"), ok)
+	}
+}
+
 func testCommand() *cobra.Command {
 	cmd := &cobra.Command{}
 	cmd.SetContext(context.Background())

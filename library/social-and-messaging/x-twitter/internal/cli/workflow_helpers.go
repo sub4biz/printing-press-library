@@ -133,21 +133,22 @@ func normalizeRecentSearchEnvelope(data json.RawMessage, include map[string]bool
 }
 
 func sinceStartTime(value string) (time.Time, bool, error) {
-	value = strings.TrimSpace(strings.ToLower(value))
-	if value == "" || value == "last" || value == "all" {
+	trimmed := strings.TrimSpace(value)
+	lowered := strings.ToLower(trimmed)
+	if lowered == "" || lowered == "last" || lowered == "all" {
 		return time.Time{}, false, nil
 	}
-	if dur, ok, err := parseFlexibleDuration(value); err != nil {
+	if dur, ok, err := parseFlexibleDuration(lowered); err != nil {
 		return time.Time{}, false, err
 	} else if ok {
 		return time.Now().UTC().Add(-dur), true, nil
 	}
 	for _, layout := range []string{time.RFC3339, "2006-01-02"} {
-		if t, err := time.Parse(layout, value); err == nil {
+		if t, err := time.Parse(layout, trimmed); err == nil {
 			return t.UTC(), true, nil
 		}
 	}
-	return time.Time{}, false, usageErr(fmt.Errorf("invalid --since %q: use last, a duration like 24h/7d, RFC3339, or YYYY-MM-DD", value))
+	return time.Time{}, false, usageErr(fmt.Errorf("invalid --since %q: use last, a duration like 24h/7d, RFC3339, or YYYY-MM-DD", trimmed))
 }
 
 func parseFlexibleDuration(value string) (time.Duration, bool, error) {

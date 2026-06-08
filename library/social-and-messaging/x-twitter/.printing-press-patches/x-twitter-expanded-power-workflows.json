@@ -22,5 +22,5 @@
     "SKILL.md",
     "README.md"
   ],
-  "validated_outcome": "Focused tests cover monitor definitions/dedupe, preview duplicate checks, URL query normalization, account profile normalization, brief construction, performance grouping, timeline export formatting, plus go test ./..., go build, and strict SKILL.md verification."
+  "validated_outcome": "Focused tests cover monitor definitions/dedupe, preview duplicate checks, URL query normalization, RFC3339 since parsing, account profile normalization, brief construction, performance grouping, timeline export formatting and LIKE escaping, plus go test ./..., go build, and strict SKILL.md verification."
 }
