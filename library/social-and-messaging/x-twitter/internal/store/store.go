@@ -575,6 +575,14 @@ func (s *Store) migrate(ctx context.Context) error {
 		)`,
 		`CREATE INDEX IF NOT EXISTS idx_post_performance_tweet_captured ON post_performance_snapshots(tweet_id, captured_at)`,
 		`CREATE INDEX IF NOT EXISTS idx_post_performance_captured ON post_performance_snapshots(captured_at)`,
+		`DELETE FROM post_performance_snapshots
+		 WHERE id NOT IN (
+		   SELECT MAX(id)
+		   FROM post_performance_snapshots
+		   GROUP BY tweet_id, COALESCE(label, '')
+		 )`,
+		`CREATE UNIQUE INDEX IF NOT EXISTS idx_post_performance_tweet_label_unique
+		 ON post_performance_snapshots(tweet_id, COALESCE(label, ''))`,
 		resourcesFTSCreateSQL,
 		`CREATE TABLE IF NOT EXISTS "account_activity" (
 			"id" TEXT PRIMARY KEY,

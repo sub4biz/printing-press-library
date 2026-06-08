@@ -140,7 +140,8 @@ func listMonitorResultItems(cmd *cobra.Command, db *store.Store, monitor, since 
 	defer rows.Close()
 	var items []collectionItemSnapshot
 	for rows.Next() {
-		var tweetID, raw, urlValue, seenAt string
+		var tweetID, raw, seenAt string
+		var urlValue sql.NullString
 		if err := rows.Scan(&tweetID, &raw, &urlValue, &seenAt); err != nil {
 			return nil, err
 		}
@@ -148,8 +149,8 @@ func listMonitorResultItems(cmd *cobra.Command, db *store.Store, monitor, since 
 		_ = json.Unmarshal([]byte(raw), &rec)
 		item := collectionItemFromPost(&rec, seenAt)
 		item.TweetID = tweetID
-		if item.URL == "" {
-			item.URL = urlValue
+		if item.URL == "" && urlValue.Valid {
+			item.URL = urlValue.String
 		}
 		items = append(items, item)
 	}

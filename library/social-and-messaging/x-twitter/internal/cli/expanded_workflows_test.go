@@ -96,6 +96,34 @@ func TestMonitorResultsDedupeAndBriefItems(t *testing.T) {
 	}
 }
 
+func TestListMonitorResultItemsAllowsNullSourceURL(t *testing.T) {
+	dbPath := filepath.Join(t.TempDir(), "x-twitter.db")
+	db, err := store.OpenWithContext(context.Background(), dbPath)
+	if err != nil {
+		t.Fatalf("open store: %v", err)
+	}
+	defer db.Close()
+	cmd := testCommand()
+	def := monitorDefinition{Name: "launch", Kind: "query", Query: "launch"}
+	if err := upsertMonitorDefinition(cmd, db, def); err != nil {
+		t.Fatalf("upsert monitor: %v", err)
+	}
+	raw := `{"id":"12345","text":"launch day","created_at":"2026-01-01T00:00:00Z"}`
+	if _, err := db.DB().ExecContext(cmd.Context(),
+		`INSERT INTO workflow_monitor_results(monitor_name, tweet_id, tweet_json, source_url, seen_at, run_id)
+		 VALUES(?, ?, ?, NULL, ?, ?)`,
+		"launch", "12345", raw, "2026-01-01T00:00:00Z", "2026-01-01T00:00:00Z"); err != nil {
+		t.Fatalf("insert monitor result: %v", err)
+	}
+	items, err := listMonitorResultItems(cmd, db, "launch", "", 10)
+	if err != nil {
+		t.Fatalf("list monitor results: %v", err)
+	}
+	if len(items) != 1 || items[0].TweetID != "12345" || items[0].Text != "launch day" {
+		t.Fatalf("items = %+v", items)
+	}
+}
+
 func TestNormalizeAccountProfile(t *testing.T) {
 	profile, err := normalizeAccountProfile(json.RawMessage(`{
 		"id":"42",
@@ -137,6 +165,35 @@ func TestPerformanceSnapshotsAnalyzeAndGrouping(t *testing.T) {
 		t.Fatalf("analyze snapshots: %v", err)
 	}
 	if len(groups) != 1 || groups[0].Count != 2 || groups[0].Averages["like_count"] != 6 {
+		t.Fatalf("groups = %+v", groups)
+	}
+}
+
+func TestPerformanceSnapshotsReplaceSameTweetAndLabel(t *testing.T) {
+	dbPath := filepath.Join(t.TempDir(), "x-twitter.db")
+	db, err := store.OpenWithContext(context.Background(), dbPath)
+	if err != nil {
+		t.Fatalf("open store: %v", err)
+	}
+	defer db.Close()
+	cmd := testCommand()
+	first := []*resolvedPostRecord{
+		{TweetID: "11111", URL: "https://x.com/i/web/status/11111", CreatedAt: "2026-01-01T00:00:00Z", PostType: "original", PublicMetrics: map[string]any{"like_count": float64(4)}, Source: "local"},
+	}
+	second := []*resolvedPostRecord{
+		{TweetID: "11111", URL: "https://x.com/i/web/status/11111", CreatedAt: "2026-01-01T00:00:00Z", PostType: "original", PublicMetrics: map[string]any{"like_count": float64(10)}, Source: "local"},
+	}
+	if _, err := savePerformanceSnapshots(cmd, db, first, "24h"); err != nil {
+		t.Fatalf("first snapshot: %v", err)
+	}
+	if _, err := savePerformanceSnapshots(cmd, db, second, "24h"); err != nil {
+		t.Fatalf("second snapshot: %v", err)
+	}
+	groups, err := analyzePerformanceSnapshots(cmd, db, "", "label")
+	if err != nil {
+		t.Fatalf("analyze snapshots: %v", err)
+	}
+	if len(groups) != 1 || groups[0].Count != 1 || groups[0].Averages["like_count"] != 10 {
 		t.Fatalf("groups = %+v", groups)
 	}
 }

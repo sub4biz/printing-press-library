@@ -253,6 +253,12 @@ func savePerformanceSnapshots(cmd *cobra.Command, db *store.Store, records []*re
 		return nil, err
 	}
 	defer stmt.Close()
+	deleteStmt, err := tx.PrepareContext(cmd.Context(),
+		`DELETE FROM post_performance_snapshots WHERE tweet_id = ? AND COALESCE(label, '') = COALESCE(?, '')`)
+	if err != nil {
+		return nil, err
+	}
+	defer deleteStmt.Close()
 	for _, rec := range records {
 		if rec == nil {
 			continue
@@ -273,6 +279,9 @@ func savePerformanceSnapshots(cmd *cobra.Command, db *store.Store, records []*re
 		var ageArg any
 		if age != nil {
 			ageArg = *age
+		}
+		if _, err := deleteStmt.ExecContext(cmd.Context(), rec.TweetID, label); err != nil {
+			return nil, err
 		}
 		if _, err := stmt.ExecContext(cmd.Context(),
 			rec.TweetID, label, now, string(metricsRaw), string(raw), rec.URL, ageArg, rec.Source); err != nil {
