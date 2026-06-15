@@ -2,6 +2,10 @@
 
 This file is maintained by printing-press-library release automation. Do not hand-edit release sections in normal PRs.
 
+## 2026.6.7 - 2026-06-15
+
+- fix(x-twitter): improve article agent ergonomics (#1213).
+
 ## 2026.6.6 - 2026-06-11
 
 - feat(cli): x-twitter LINK entities, HTML comment stripping, and articles update-md (#1141).
