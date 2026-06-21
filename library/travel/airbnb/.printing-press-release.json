@@ -2,16 +2,16 @@
   "schema_version": 1,
   "slug": "airbnb",
   "cli_name": "airbnb-pp-cli",
-  "version": "2026.6.2",
-  "released_at": "2026-06-21T08:16:26Z",
-  "source_commit": "acb84091ff016c6e7aea5f8cf6956a694aa0d1c7",
+  "version": "2026.6.3",
+  "released_at": "2026-06-21T22:18:57Z",
+  "source_commit": "9e0b84b8498d77b52d6d3500244369a2fcd97924",
   "printing_press_version": "3.6.1",
   "changes": [
     {
-      "title": "fix(catalog): require Go 1.26.4 across published modules",
-      "pr": 1308,
-      "url": "https://github.com/mvanhorn/printing-press-library/pull/1308",
-      "commit": "acb84091ff016c6e7aea5f8cf6956a694aa0d1c7"
+      "title": "fix(airbnb): persist scrape results, honest watch-check, watch remove, scraper-aware sync",
+      "pr": 1165,
+      "url": "https://github.com/mvanhorn/printing-press-library/pull/1165",
+      "commit": "9e0b84b8498d77b52d6d3500244369a2fcd97924"
     }
   ]
 }
