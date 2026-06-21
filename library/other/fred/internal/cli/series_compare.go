@@ -121,14 +121,28 @@ func newNovelSeriesCompareCmd(flags *rootFlags) *cobra.Command {
 			// --csv: the compare view is nested ({series, rows:[{date, values{}}]}),
 			// which the array-based CSV renderer cannot flatten on its own — so the
 			// flag was silently ignored and JSON was emitted regardless. Flatten to
-			// one row per date (a column per series) and route through the shared CSV
-			// writer. Default JSON output is unchanged.
+			// one row per date (a column per series) and route through the shared
+			// filtered writer so --csv, --select, --compact, and --quiet behave
+			// identically to every other command. Default JSON output is unchanged.
 			if flags.csv {
-				data, err := json.Marshal(flattenCompareRows(args, rows))
-				if err != nil {
-					return apiErr(fmt.Errorf("encoding compare rows for CSV: %w", err))
+				// Emit columns only for series that actually returned data. A failed
+				// series is surfaced on stderr and in the JSON fetch_failures; in CSV
+				// it would otherwise appear as a silent column of blanks that a caller
+				// could mistake for "no observations in range".
+				okSeries := make([]string, 0, len(args))
+				for _, id := range args {
+					failed := false
+					for _, f := range failures {
+						if f.SeriesID == id {
+							failed = true
+							break
+						}
+					}
+					if !failed {
+						okSeries = append(okSeries, id)
+					}
 				}
-				return printCSV(cmd.OutOrStdout(), data)
+				return printJSONFiltered(cmd.OutOrStdout(), flattenCompareRows(okSeries, rows), flags)
 			}
 			return flags.printJSON(cmd, view)
 		},
