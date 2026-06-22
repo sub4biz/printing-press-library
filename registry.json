@@ -4814,6 +4814,59 @@
       }
     },
     {
+      "name": "forgejo",
+      "category": "developer-tools",
+      "api": "Forgejo",
+      "description": "The `gh` for Forgejo — works with any instance, stores your data locally, and speaks Forgejo natively.",
+      "search_terms": [
+        "forgejo",
+        "forgejo-pp-cli",
+        "The `gh` for Forgejo — works with any instance, stores your data locally, and speaks Forgejo natively.",
+        "Multi-repo triage dashboard",
+        "issue dashboard",
+        "See all your open issues across every repo (and every Forgejo host) in one sorted table — no browser, no tab-switching.",
+        "Unified notification inbox (cross-host)",
+        "notification inbox",
+        "One inbox for all your Forgejo instances — Codeberg, company Forgejo, university instance — sorted by recency with a host column.",
+        "Runner health sweep (cross-org)",
+        "runner sweep",
+        "See the status of every Actions runner across all your orgs in one pass — flag offline runners, watch live with --watch.",
+        "Release changelog generation",
+        "release changelog",
+        "Auto-generate a grouped changelog between two tags from closed issues and merged PRs — label-grouped, markdown or JSON output.",
+        "Release upload with progress and retry",
+        "release upload",
+        "Upload release assets with a real progress bar, automatic retry on failure, and post-upload size verification — not silent curl.",
+        "Stale issue sweeper",
+        "issue sweep",
+        "Find issues with no activity past a threshold, label them, post a comment, and optionally close — with --dry-run and confirmation before acting.",
+        "PR review queue",
+        "pr queue",
+        "Your pending reviews across all repos in one view — PRs where you are a requested reviewer, with CI check status and approval counts.",
+        "CI check status summary",
+        "ci status",
+        "Pass/fail status of the latest CI run per repo (or per branch) across all watched repos, with --watch for live tailing."
+      ],
+      "path": "library/developer-tools/forgejo",
+      "printer": "jrimmer",
+      "printer_name": "jrimmer",
+      "mcp": {
+        "binary": "forgejo-pp-mcp",
+        "transports": [
+          "stdio",
+          "http"
+        ],
+        "tool_count": 491,
+        "public_tool_count": 0,
+        "auth_type": "api_key",
+        "env_vars": [
+          "FORGEJO_TOKEN"
+        ],
+        "mcp_ready": "full",
+        "spec_format": "openapi3"
+      }
+    },
+    {
       "name": "foxnews",
       "category": "media-and-entertainment",
       "api": "Fox News",
