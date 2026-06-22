@@ -111,7 +111,7 @@ func (c *Client) GetWithHeaders(ctx context.Context, path string, params map[str
 		return nil, err
 	}
 	binaryResponse := c.wantsBinaryResponse(headers)
-	cacheEnabled := c.responseCacheEnabled(binaryResponse)
+	cacheEnabled := c.responseCacheEnabled(binaryResponse) && !isSecretPath(path)
 	// Check cache for GET requests
 	if cacheEnabled {
 		if cached, ok := c.readCache(path, params); ok {
@@ -144,7 +144,7 @@ func (c *Client) GetNoCache(ctx context.Context, path string, params map[string]
 func (c *Client) GetWithHeadersNoCache(ctx context.Context, path string, params map[string]string, headers map[string]string) (json.RawMessage, error) {
 	binaryResponse := c.wantsBinaryResponse(headers)
 	result, _, err := c.do(ctx, "GET", path, params, nil, headers)
-	if err == nil && c.responseCacheEnabled(binaryResponse) {
+	if err == nil && c.responseCacheEnabled(binaryResponse) && !isSecretPath(path) {
 		c.writeCache(path, params, result)
 	}
 	return result, err
@@ -152,6 +152,13 @@ func (c *Client) GetWithHeadersNoCache(ctx context.Context, path string, params 
 
 func (c *Client) responseCacheEnabled(binaryResponse bool) bool {
 	return !binaryResponse && !c.NoCache && !c.DryRun && c.cacheDir != ""
+}
+
+// isSecretPath returns true for endpoints that return tokens or secrets.
+// Responses from these paths are never written to the on-disk cache.
+func isSecretPath(path string) bool {
+	return strings.HasSuffix(path, "/registration-token") ||
+		path == "/user/gpg_key_token"
 }
 
 // The response cache stores text/JSON bodies as <hash>.json. Binary callers
@@ -236,9 +243,9 @@ func (c *Client) readCache(path string, params map[string]string) (json.RawMessa
 }
 
 func (c *Client) writeCache(path string, params map[string]string, data json.RawMessage) {
-	os.MkdirAll(c.cacheDir, 0o755)
+	os.MkdirAll(c.cacheDir, 0o700)
 	cacheFile := filepath.Join(c.cacheDir, c.cacheKey(path, params)+".json")
-	os.WriteFile(cacheFile, []byte(data), 0o644)
+	os.WriteFile(cacheFile, []byte(data), 0o600)
 }
 
 // invalidateCache wholesale-removes the cache directory so the next read

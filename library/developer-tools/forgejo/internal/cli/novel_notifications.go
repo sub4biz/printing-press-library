@@ -106,7 +106,7 @@ func newNovelNotificationInboxCmd(flags *rootFlags) *cobra.Command {
 	cmd.Flags().BoolVar(&unread, "unread", false, "Show only unread notifications")
 	cmd.Flags().StringVar(&since, "since", "", "Show notifications updated after this time (RFC3339 or duration like 24h)")
 	cmd.Flags().IntVar(&limit, "limit", 50, "Maximum number of notifications to show")
-	cmd.Flags().BoolVar(&allHosts, "all-hosts", false, "Aggregate notifications from all configured host profiles")
+	cmd.Flags().BoolVar(&allHosts, "all-hosts", false, "Aggregate notifications from all configured host profiles (not yet implemented)")
 	_ = allHosts // multi-host aggregation requires SQLite sync; single-host API used otherwise
 
 	return cmd

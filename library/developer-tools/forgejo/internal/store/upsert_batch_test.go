@@ -642,8 +642,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandOrgReposGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count org_repos: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("org_repos count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "org_id")
+	if typed != len(items) {
+		t.Fatalf("org_repos count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -779,8 +779,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandOrgsActionsGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count orgs_actions: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("orgs_actions count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "orgs_id")
+	if typed != len(items) {
+		t.Fatalf("orgs_actions count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -906,8 +906,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandOrgsActivitiesGeneric(t *testing.T
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count orgs_activities: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("orgs_activities count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "orgs_id")
+	if typed != len(items) {
+		t.Fatalf("orgs_activities count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -1033,8 +1033,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandOrgsAvatarGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count orgs_avatar: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("orgs_avatar count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "orgs_id")
+	if typed != len(items) {
+		t.Fatalf("orgs_avatar count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -1128,8 +1128,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandBlockGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count block: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("block count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "orgs_id")
+	if typed != len(items) {
+		t.Fatalf("block count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -1223,8 +1223,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandOrgsHooksGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count orgs_hooks: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("orgs_hooks count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "orgs_id")
+	if typed != len(items) {
+		t.Fatalf("orgs_hooks count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -1350,8 +1350,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandOrgsLabelsGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count orgs_labels: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("orgs_labels count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "orgs_id")
+	if typed != len(items) {
+		t.Fatalf("orgs_labels count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -1477,8 +1477,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandListBlockedGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count list_blocked: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("list_blocked count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "orgs_id")
+	if typed != len(items) {
+		t.Fatalf("list_blocked count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -1604,8 +1604,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandOrgsMembersGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count orgs_members: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("orgs_members count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "orgs_id")
+	if typed != len(items) {
+		t.Fatalf("orgs_members count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -1731,8 +1731,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandPublicMembersGeneric(t *testing.T)
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count public_members: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("public_members count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "orgs_id")
+	if typed != len(items) {
+		t.Fatalf("public_members count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -1858,8 +1858,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandQuotaGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count quota: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("quota count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "orgs_id")
+	if typed != len(items) {
+		t.Fatalf("quota count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -1985,8 +1985,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandRenameGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count rename: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("rename count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "orgs_id")
+	if typed != len(items) {
+		t.Fatalf("rename count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -2080,8 +2080,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandOrgsReposGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count orgs_repos: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("orgs_repos count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "orgs_id")
+	if typed != len(items) {
+		t.Fatalf("orgs_repos count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -2207,8 +2207,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandOrgsTeamsGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count orgs_teams: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("orgs_teams count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "orgs_id")
+	if typed != len(items) {
+		t.Fatalf("orgs_teams count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -2334,8 +2334,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandUnblockGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count unblock: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("unblock count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "orgs_id")
+	if typed != len(items) {
+		t.Fatalf("unblock count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -2471,8 +2471,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandFilesGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count files: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("files count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "packages_id")
+	if typed != len(items) {
+		t.Fatalf("files count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -2608,8 +2608,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandReposActionsGeneric(t *testing.T) 
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count repos_actions: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("repos_actions count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "repos_id")
+	if typed != len(items) {
+		t.Fatalf("repos_actions count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -2735,8 +2735,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandReposActivitiesGeneric(t *testing.
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count repos_activities: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("repos_activities count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "repos_id")
+	if typed != len(items) {
+		t.Fatalf("repos_activities count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -2862,8 +2862,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandArchiveGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count archive: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("archive count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "repos_id")
+	if typed != len(items) {
+		t.Fatalf("archive count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -2957,8 +2957,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandAssigneesGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count assignees: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("assignees count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "repos_id")
+	if typed != len(items) {
+		t.Fatalf("assignees count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -3052,8 +3052,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandReposAvatarGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count repos_avatar: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("repos_avatar count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "repos_id")
+	if typed != len(items) {
+		t.Fatalf("repos_avatar count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -3147,8 +3147,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandBranchProtectionsGeneric(t *testin
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count branch_protections: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("branch_protections count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "repos_id")
+	if typed != len(items) {
+		t.Fatalf("branch_protections count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -3242,8 +3242,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandBranchesGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count branches: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("branches count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "repos_id")
+	if typed != len(items) {
+		t.Fatalf("branches count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -3369,8 +3369,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandCollaboratorsGeneric(t *testing.T)
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count collaborators: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("collaborators count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "repos_id")
+	if typed != len(items) {
+		t.Fatalf("collaborators count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -3496,8 +3496,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandCommitsGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count commits: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("commits count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "repos_id")
+	if typed != len(items) {
+		t.Fatalf("commits count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -3623,8 +3623,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandCompareGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count compare: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("compare count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "repos_id")
+	if typed != len(items) {
+		t.Fatalf("compare count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -3718,8 +3718,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandContentsGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count contents: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("contents count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "repos_id")
+	if typed != len(items) {
+		t.Fatalf("contents count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -3813,8 +3813,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandConvertGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count convert: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("convert count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "repos_id")
+	if typed != len(items) {
+		t.Fatalf("convert count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -3908,8 +3908,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandDiffpatchGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count diffpatch: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("diffpatch count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "repos_id")
+	if typed != len(items) {
+		t.Fatalf("diffpatch count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -4003,8 +4003,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandEditorconfigGeneric(t *testing.T) 
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count editorconfig: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("editorconfig count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "repos_id")
+	if typed != len(items) {
+		t.Fatalf("editorconfig count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -4098,8 +4098,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandFlagsGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count flags: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("flags count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "repos_id")
+	if typed != len(items) {
+		t.Fatalf("flags count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -4193,8 +4193,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandForksGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count forks: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("forks count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "repos_id")
+	if typed != len(items) {
+		t.Fatalf("forks count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -4320,8 +4320,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandGenerateGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count generate: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("generate count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "repos_id")
+	if typed != len(items) {
+		t.Fatalf("generate count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -4415,8 +4415,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandGitGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count git: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("git count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "repos_id")
+	if typed != len(items) {
+		t.Fatalf("git count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -4542,8 +4542,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandReposHooksGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count repos_hooks: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("repos_hooks count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "repos_id")
+	if typed != len(items) {
+		t.Fatalf("repos_hooks count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -4669,8 +4669,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandIssueConfigGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count issue_config: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("issue_config count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "repos_id")
+	if typed != len(items) {
+		t.Fatalf("issue_config count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -4764,8 +4764,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandIssueTemplatesGeneric(t *testing.T
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count issue_templates: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("issue_templates count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "repos_id")
+	if typed != len(items) {
+		t.Fatalf("issue_templates count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -4859,8 +4859,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandIssuesGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count issues: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("issues count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "repos_id")
+	if typed != len(items) {
+		t.Fatalf("issues count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -4986,8 +4986,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandReposKeysGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count repos_keys: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("repos_keys count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "repos_id")
+	if typed != len(items) {
+		t.Fatalf("repos_keys count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -5113,8 +5113,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandReposLabelsGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count repos_labels: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("repos_labels count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "repos_id")
+	if typed != len(items) {
+		t.Fatalf("repos_labels count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -5240,8 +5240,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandLanguagesGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count languages: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("languages count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "repos_id")
+	if typed != len(items) {
+		t.Fatalf("languages count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -5335,8 +5335,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandMediaGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count media: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("media count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "repos_id")
+	if typed != len(items) {
+		t.Fatalf("media count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -5430,8 +5430,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandMilestonesGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count milestones: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("milestones count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "repos_id")
+	if typed != len(items) {
+		t.Fatalf("milestones count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -5557,8 +5557,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandMirrorSyncGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count mirror_sync: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("mirror_sync count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "repos_id")
+	if typed != len(items) {
+		t.Fatalf("mirror_sync count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -5652,8 +5652,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandNewPinAllowedGeneric(t *testing.T)
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count new_pin_allowed: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("new_pin_allowed count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "repos_id")
+	if typed != len(items) {
+		t.Fatalf("new_pin_allowed count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -5747,8 +5747,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandReposNotificationsGeneric(t *testi
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count repos_notifications: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("repos_notifications count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "repos_id")
+	if typed != len(items) {
+		t.Fatalf("repos_notifications count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -5874,8 +5874,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandPullsGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count pulls: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("pulls count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "repos_id")
+	if typed != len(items) {
+		t.Fatalf("pulls count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -6001,8 +6001,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandPushMirrorsGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count push_mirrors: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("push_mirrors count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "repos_id")
+	if typed != len(items) {
+		t.Fatalf("push_mirrors count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -6128,8 +6128,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandPushMirrorsSyncGeneric(t *testing.
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count push_mirrors_sync: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("push_mirrors_sync count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "repos_id")
+	if typed != len(items) {
+		t.Fatalf("push_mirrors_sync count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -6223,8 +6223,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandRawGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count raw: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("raw count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "repos_id")
+	if typed != len(items) {
+		t.Fatalf("raw count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -6318,8 +6318,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandReleasesGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count releases: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("releases count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "repos_id")
+	if typed != len(items) {
+		t.Fatalf("releases count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -6445,8 +6445,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandReviewersGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count reviewers: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("reviewers count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "repos_id")
+	if typed != len(items) {
+		t.Fatalf("reviewers count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -6540,8 +6540,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandReposSigningKeyGpgGeneric(t *testi
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count repos_signing_key_gpg: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("repos_signing_key_gpg count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "repos_id")
+	if typed != len(items) {
+		t.Fatalf("repos_signing_key_gpg count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -6635,8 +6635,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandStargazersGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count stargazers: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("stargazers count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "repos_id")
+	if typed != len(items) {
+		t.Fatalf("stargazers count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -6762,8 +6762,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandStatusesGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count statuses: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("statuses count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "repos_id")
+	if typed != len(items) {
+		t.Fatalf("statuses count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -6889,8 +6889,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandSubscribersGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count subscribers: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("subscribers count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "repos_id")
+	if typed != len(items) {
+		t.Fatalf("subscribers count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -7016,8 +7016,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandSubscriptionGeneric(t *testing.T) 
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count subscription: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("subscription count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "repos_id")
+	if typed != len(items) {
+		t.Fatalf("subscription count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -7111,8 +7111,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandSyncForkGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count sync_fork: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("sync_fork count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "repos_id")
+	if typed != len(items) {
+		t.Fatalf("sync_fork count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -7206,8 +7206,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandTagProtectionsGeneric(t *testing.T
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count tag_protections: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("tag_protections count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "repos_id")
+	if typed != len(items) {
+		t.Fatalf("tag_protections count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -7301,8 +7301,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandTagsGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count tags: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("tags count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "repos_id")
+	if typed != len(items) {
+		t.Fatalf("tags count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -7428,8 +7428,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandReposTeamsGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count repos_teams: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("repos_teams count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "repos_id")
+	if typed != len(items) {
+		t.Fatalf("repos_teams count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -7523,8 +7523,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandTimesGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count times: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("times count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "repos_id")
+	if typed != len(items) {
+		t.Fatalf("times count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -7650,8 +7650,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandReposTopicsGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count repos_topics: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("repos_topics count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "repos_id")
+	if typed != len(items) {
+		t.Fatalf("repos_topics count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -7777,8 +7777,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandTransferGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count transfer: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("transfer count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "repos_id")
+	if typed != len(items) {
+		t.Fatalf("transfer count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -7872,8 +7872,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandWikiGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count wiki: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("wiki count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "repos_id")
+	if typed != len(items) {
+		t.Fatalf("wiki count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -8125,8 +8125,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandTeamsActivitiesGeneric(t *testing.
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count teams_activities: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("teams_activities count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "teams_id")
+	if typed != len(items) {
+		t.Fatalf("teams_activities count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -8220,8 +8220,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandTeamsMembersGeneric(t *testing.T) 
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count teams_members: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("teams_members count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "teams_id")
+	if typed != len(items) {
+		t.Fatalf("teams_members count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -8315,8 +8315,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandTeamsReposGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count teams_repos: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("teams_repos count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "teams_id")
+	if typed != len(items) {
+		t.Fatalf("teams_repos count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -8494,8 +8494,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandUsersActivitiesGeneric(t *testing.
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count users_activities: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("users_activities count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "users_id")
+	if typed != len(items) {
+		t.Fatalf("users_activities count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -8621,8 +8621,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandFollowersGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count followers: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("followers count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "users_id")
+	if typed != len(items) {
+		t.Fatalf("followers count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -8748,8 +8748,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandFollowingGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count following: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("following count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "users_id")
+	if typed != len(items) {
+		t.Fatalf("following count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -8875,8 +8875,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandGpgKeysGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count gpg_keys: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("gpg_keys count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "users_id")
+	if typed != len(items) {
+		t.Fatalf("gpg_keys count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -9002,8 +9002,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandHeatmapGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count heatmap: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("heatmap count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "users_id")
+	if typed != len(items) {
+		t.Fatalf("heatmap count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -9097,8 +9097,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandUsersKeysGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count users_keys: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("users_keys count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "users_id")
+	if typed != len(items) {
+		t.Fatalf("users_keys count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -9224,8 +9224,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandUsersOrgsGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count users_orgs: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("users_orgs count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "users_id")
+	if typed != len(items) {
+		t.Fatalf("users_orgs count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -9351,8 +9351,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandUsersReposGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count users_repos: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("users_repos count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "users_id")
+	if typed != len(items) {
+		t.Fatalf("users_repos count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -9478,8 +9478,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandStarredGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count starred: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("starred count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "users_id")
+	if typed != len(items) {
+		t.Fatalf("starred count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -9605,8 +9605,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandSubscriptionsGeneric(t *testing.T)
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count subscriptions: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("subscriptions count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "users_id")
+	if typed != len(items) {
+		t.Fatalf("subscriptions count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 
@@ -9732,8 +9732,8 @@ func TestUpsertBatch_TypedFailureDoesNotStrandTokensGeneric(t *testing.T) {
 	if err := db.QueryRow(typedQuery).Scan(&typed); err != nil {
 		t.Fatalf("count tokens: %v", err)
 	}
-	if typed != 0 {
-		t.Fatalf("tokens count = %d, want 0 (typed insert violated NOT NULL on %q)", typed, "users_id")
+	if typed != len(items) {
+		t.Fatalf("tokens count = %d, want %d (FK column is nullable; typed insert must land)", typed, len(items))
 	}
 }
 

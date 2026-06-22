@@ -111,7 +111,7 @@ Add to your Claude Desktop config (`~/Library/Application Support/Claude/claude_
 
 ## Authentication
 
-fj supports two auth modes: token (fastest — `fj auth login --token <tok> --host <url>`) and OAuth2 device flow (no token copy-paste — `fj auth login --host <url>` opens a device code flow). Both store credentials per-host at `~/.config/fj/config.yml`. Use `--sudo <user>` for admin impersonation on instances where your token has admin rights.
+Set your Forgejo personal access token via the `FORGEJO_TOKEN` environment variable or `forgejo-pp-cli auth set-token <token>`. Use `auth setup` to print the steps for generating a token, `auth status` to verify the current credential, and `auth logout` to clear it. Multi-host profiles and OAuth2 device flow are not yet implemented.
 
 ## Quick Start
 

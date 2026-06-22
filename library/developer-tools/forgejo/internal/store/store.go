@@ -42,7 +42,7 @@ func IsUUID(s string) bool {
 // shape — adding columns, dropping indexes, changing FTS5 tokenizers —
 // so an older binary refuses to open a newer database rather than silently
 // producing wrong results against a schema it cannot read.
-const StoreSchemaVersion = 2
+const StoreSchemaVersion = 3
 
 const resourcesFTSCreateSQL = `CREATE VIRTUAL TABLE IF NOT EXISTS resources_fts USING fts5(
 	id, resource_type, content, tokenize='porter unicode61'
@@ -932,7 +932,7 @@ func (s *Store) migrate(ctx context.Context) error {
 		`CREATE INDEX IF NOT EXISTS "idx_notifications_updated_at" ON "notifications"("updated_at")`,
 		`CREATE TABLE IF NOT EXISTS "org_repos" (
 			"id" TEXT PRIMARY KEY,
-			"org_id" TEXT NOT NULL,
+			"org_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP
 		)`,
@@ -974,7 +974,7 @@ func (s *Store) migrate(ctx context.Context) error {
 		END`,
 		`CREATE TABLE IF NOT EXISTS "orgs_actions" (
 			"id" TEXT PRIMARY KEY,
-			"orgs_id" TEXT NOT NULL,
+			"orgs_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 			"parent_id" TEXT
@@ -983,7 +983,7 @@ func (s *Store) migrate(ctx context.Context) error {
 		`CREATE INDEX IF NOT EXISTS "idx_orgs_actions_parent_id" ON "orgs_actions"("parent_id")`,
 		`CREATE TABLE IF NOT EXISTS "orgs_activities" (
 			"id" TEXT PRIMARY KEY,
-			"orgs_id" TEXT NOT NULL,
+			"orgs_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 			"parent_id" TEXT
@@ -992,21 +992,21 @@ func (s *Store) migrate(ctx context.Context) error {
 		`CREATE INDEX IF NOT EXISTS "idx_orgs_activities_parent_id" ON "orgs_activities"("parent_id")`,
 		`CREATE TABLE IF NOT EXISTS "orgs_avatar" (
 			"id" TEXT PRIMARY KEY,
-			"orgs_id" TEXT NOT NULL,
+			"orgs_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP
 		)`,
 		`CREATE INDEX IF NOT EXISTS "idx_orgs_avatar_orgs_id" ON "orgs_avatar"("orgs_id")`,
 		`CREATE TABLE IF NOT EXISTS "block" (
 			"id" TEXT PRIMARY KEY,
-			"orgs_id" TEXT NOT NULL,
+			"orgs_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP
 		)`,
 		`CREATE INDEX IF NOT EXISTS "idx_block_orgs_id" ON "block"("orgs_id")`,
 		`CREATE TABLE IF NOT EXISTS "orgs_hooks" (
 			"id" TEXT PRIMARY KEY,
-			"orgs_id" TEXT NOT NULL,
+			"orgs_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 			"parent_id" TEXT
@@ -1015,7 +1015,7 @@ func (s *Store) migrate(ctx context.Context) error {
 		`CREATE INDEX IF NOT EXISTS "idx_orgs_hooks_parent_id" ON "orgs_hooks"("parent_id")`,
 		`CREATE TABLE IF NOT EXISTS "orgs_labels" (
 			"id" TEXT PRIMARY KEY,
-			"orgs_id" TEXT NOT NULL,
+			"orgs_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 			"parent_id" TEXT
@@ -1024,7 +1024,7 @@ func (s *Store) migrate(ctx context.Context) error {
 		`CREATE INDEX IF NOT EXISTS "idx_orgs_labels_parent_id" ON "orgs_labels"("parent_id")`,
 		`CREATE TABLE IF NOT EXISTS "list_blocked" (
 			"id" TEXT PRIMARY KEY,
-			"orgs_id" TEXT NOT NULL,
+			"orgs_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 			"parent_id" TEXT
@@ -1033,7 +1033,7 @@ func (s *Store) migrate(ctx context.Context) error {
 		`CREATE INDEX IF NOT EXISTS "idx_list_blocked_parent_id" ON "list_blocked"("parent_id")`,
 		`CREATE TABLE IF NOT EXISTS "orgs_members" (
 			"id" TEXT PRIMARY KEY,
-			"orgs_id" TEXT NOT NULL,
+			"orgs_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 			"parent_id" TEXT
@@ -1042,7 +1042,7 @@ func (s *Store) migrate(ctx context.Context) error {
 		`CREATE INDEX IF NOT EXISTS "idx_orgs_members_parent_id" ON "orgs_members"("parent_id")`,
 		`CREATE TABLE IF NOT EXISTS "public_members" (
 			"id" TEXT PRIMARY KEY,
-			"orgs_id" TEXT NOT NULL,
+			"orgs_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 			"parent_id" TEXT
@@ -1051,7 +1051,7 @@ func (s *Store) migrate(ctx context.Context) error {
 		`CREATE INDEX IF NOT EXISTS "idx_public_members_parent_id" ON "public_members"("parent_id")`,
 		`CREATE TABLE IF NOT EXISTS "quota" (
 			"id" TEXT PRIMARY KEY,
-			"orgs_id" TEXT NOT NULL,
+			"orgs_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 			"parent_id" TEXT
@@ -1060,14 +1060,14 @@ func (s *Store) migrate(ctx context.Context) error {
 		`CREATE INDEX IF NOT EXISTS "idx_quota_parent_id" ON "quota"("parent_id")`,
 		`CREATE TABLE IF NOT EXISTS "rename" (
 			"id" TEXT PRIMARY KEY,
-			"orgs_id" TEXT NOT NULL,
+			"orgs_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP
 		)`,
 		`CREATE INDEX IF NOT EXISTS "idx_rename_orgs_id" ON "rename"("orgs_id")`,
 		`CREATE TABLE IF NOT EXISTS "orgs_repos" (
 			"id" TEXT PRIMARY KEY,
-			"orgs_id" TEXT NOT NULL,
+			"orgs_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 			"parent_id" TEXT
@@ -1076,7 +1076,7 @@ func (s *Store) migrate(ctx context.Context) error {
 		`CREATE INDEX IF NOT EXISTS "idx_orgs_repos_parent_id" ON "orgs_repos"("parent_id")`,
 		`CREATE TABLE IF NOT EXISTS "orgs_teams" (
 			"id" TEXT PRIMARY KEY,
-			"orgs_id" TEXT NOT NULL,
+			"orgs_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 			"parent_id" TEXT
@@ -1085,7 +1085,7 @@ func (s *Store) migrate(ctx context.Context) error {
 		`CREATE INDEX IF NOT EXISTS "idx_orgs_teams_parent_id" ON "orgs_teams"("parent_id")`,
 		`CREATE TABLE IF NOT EXISTS "unblock" (
 			"id" TEXT PRIMARY KEY,
-			"orgs_id" TEXT NOT NULL,
+			"orgs_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP
 		)`,
@@ -1103,7 +1103,7 @@ func (s *Store) migrate(ctx context.Context) error {
 		`CREATE INDEX IF NOT EXISTS "idx_packages_created_at" ON "packages"("created_at")`,
 		`CREATE TABLE IF NOT EXISTS "files" (
 			"id" TEXT PRIMARY KEY,
-			"packages_id" TEXT NOT NULL,
+			"packages_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP
 		)`,
@@ -1209,7 +1209,7 @@ func (s *Store) migrate(ctx context.Context) error {
 		END`,
 		`CREATE TABLE IF NOT EXISTS "repos_actions" (
 			"id" TEXT PRIMARY KEY,
-			"repos_id" TEXT NOT NULL,
+			"repos_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 			"parent_id" TEXT
@@ -1218,7 +1218,7 @@ func (s *Store) migrate(ctx context.Context) error {
 		`CREATE INDEX IF NOT EXISTS "idx_repos_actions_parent_id" ON "repos_actions"("parent_id")`,
 		`CREATE TABLE IF NOT EXISTS "repos_activities" (
 			"id" TEXT PRIMARY KEY,
-			"repos_id" TEXT NOT NULL,
+			"repos_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 			"parent_id" TEXT
@@ -1227,35 +1227,35 @@ func (s *Store) migrate(ctx context.Context) error {
 		`CREATE INDEX IF NOT EXISTS "idx_repos_activities_parent_id" ON "repos_activities"("parent_id")`,
 		`CREATE TABLE IF NOT EXISTS "archive" (
 			"id" TEXT PRIMARY KEY,
-			"repos_id" TEXT NOT NULL,
+			"repos_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP
 		)`,
 		`CREATE INDEX IF NOT EXISTS "idx_archive_repos_id" ON "archive"("repos_id")`,
 		`CREATE TABLE IF NOT EXISTS "assignees" (
 			"id" TEXT PRIMARY KEY,
-			"repos_id" TEXT NOT NULL,
+			"repos_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP
 		)`,
 		`CREATE INDEX IF NOT EXISTS "idx_assignees_repos_id" ON "assignees"("repos_id")`,
 		`CREATE TABLE IF NOT EXISTS "repos_avatar" (
 			"id" TEXT PRIMARY KEY,
-			"repos_id" TEXT NOT NULL,
+			"repos_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP
 		)`,
 		`CREATE INDEX IF NOT EXISTS "idx_repos_avatar_repos_id" ON "repos_avatar"("repos_id")`,
 		`CREATE TABLE IF NOT EXISTS "branch_protections" (
 			"id" TEXT PRIMARY KEY,
-			"repos_id" TEXT NOT NULL,
+			"repos_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP
 		)`,
 		`CREATE INDEX IF NOT EXISTS "idx_branch_protections_repos_id" ON "branch_protections"("repos_id")`,
 		`CREATE TABLE IF NOT EXISTS "branches" (
 			"id" TEXT PRIMARY KEY,
-			"repos_id" TEXT NOT NULL,
+			"repos_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 			"parent_id" TEXT
@@ -1264,7 +1264,7 @@ func (s *Store) migrate(ctx context.Context) error {
 		`CREATE INDEX IF NOT EXISTS "idx_branches_parent_id" ON "branches"("parent_id")`,
 		`CREATE TABLE IF NOT EXISTS "collaborators" (
 			"id" TEXT PRIMARY KEY,
-			"repos_id" TEXT NOT NULL,
+			"repos_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 			"parent_id" TEXT
@@ -1273,7 +1273,7 @@ func (s *Store) migrate(ctx context.Context) error {
 		`CREATE INDEX IF NOT EXISTS "idx_collaborators_parent_id" ON "collaborators"("parent_id")`,
 		`CREATE TABLE IF NOT EXISTS "commits" (
 			"id" TEXT PRIMARY KEY,
-			"repos_id" TEXT NOT NULL,
+			"repos_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 			"parent_id" TEXT
@@ -1282,49 +1282,49 @@ func (s *Store) migrate(ctx context.Context) error {
 		`CREATE INDEX IF NOT EXISTS "idx_commits_parent_id" ON "commits"("parent_id")`,
 		`CREATE TABLE IF NOT EXISTS "compare" (
 			"id" TEXT PRIMARY KEY,
-			"repos_id" TEXT NOT NULL,
+			"repos_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP
 		)`,
 		`CREATE INDEX IF NOT EXISTS "idx_compare_repos_id" ON "compare"("repos_id")`,
 		`CREATE TABLE IF NOT EXISTS "contents" (
 			"id" TEXT PRIMARY KEY,
-			"repos_id" TEXT NOT NULL,
+			"repos_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP
 		)`,
 		`CREATE INDEX IF NOT EXISTS "idx_contents_repos_id" ON "contents"("repos_id")`,
 		`CREATE TABLE IF NOT EXISTS "convert" (
 			"id" TEXT PRIMARY KEY,
-			"repos_id" TEXT NOT NULL,
+			"repos_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP
 		)`,
 		`CREATE INDEX IF NOT EXISTS "idx_convert_repos_id" ON "convert"("repos_id")`,
 		`CREATE TABLE IF NOT EXISTS "diffpatch" (
 			"id" TEXT PRIMARY KEY,
-			"repos_id" TEXT NOT NULL,
+			"repos_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP
 		)`,
 		`CREATE INDEX IF NOT EXISTS "idx_diffpatch_repos_id" ON "diffpatch"("repos_id")`,
 		`CREATE TABLE IF NOT EXISTS "editorconfig" (
 			"id" TEXT PRIMARY KEY,
-			"repos_id" TEXT NOT NULL,
+			"repos_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP
 		)`,
 		`CREATE INDEX IF NOT EXISTS "idx_editorconfig_repos_id" ON "editorconfig"("repos_id")`,
 		`CREATE TABLE IF NOT EXISTS "flags" (
 			"id" TEXT PRIMARY KEY,
-			"repos_id" TEXT NOT NULL,
+			"repos_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP
 		)`,
 		`CREATE INDEX IF NOT EXISTS "idx_flags_repos_id" ON "flags"("repos_id")`,
 		`CREATE TABLE IF NOT EXISTS "forks" (
 			"id" TEXT PRIMARY KEY,
-			"repos_id" TEXT NOT NULL,
+			"repos_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 			"parent_id" TEXT
@@ -1333,14 +1333,14 @@ func (s *Store) migrate(ctx context.Context) error {
 		`CREATE INDEX IF NOT EXISTS "idx_forks_parent_id" ON "forks"("parent_id")`,
 		`CREATE TABLE IF NOT EXISTS "generate" (
 			"id" TEXT PRIMARY KEY,
-			"repos_id" TEXT NOT NULL,
+			"repos_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP
 		)`,
 		`CREATE INDEX IF NOT EXISTS "idx_generate_repos_id" ON "generate"("repos_id")`,
 		`CREATE TABLE IF NOT EXISTS "git" (
 			"id" TEXT PRIMARY KEY,
-			"repos_id" TEXT NOT NULL,
+			"repos_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 			"parent_id" TEXT
@@ -1349,7 +1349,7 @@ func (s *Store) migrate(ctx context.Context) error {
 		`CREATE INDEX IF NOT EXISTS "idx_git_parent_id" ON "git"("parent_id")`,
 		`CREATE TABLE IF NOT EXISTS "repos_hooks" (
 			"id" TEXT PRIMARY KEY,
-			"repos_id" TEXT NOT NULL,
+			"repos_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 			"parent_id" TEXT
@@ -1358,21 +1358,21 @@ func (s *Store) migrate(ctx context.Context) error {
 		`CREATE INDEX IF NOT EXISTS "idx_repos_hooks_parent_id" ON "repos_hooks"("parent_id")`,
 		`CREATE TABLE IF NOT EXISTS "issue_config" (
 			"id" TEXT PRIMARY KEY,
-			"repos_id" TEXT NOT NULL,
+			"repos_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP
 		)`,
 		`CREATE INDEX IF NOT EXISTS "idx_issue_config_repos_id" ON "issue_config"("repos_id")`,
 		`CREATE TABLE IF NOT EXISTS "issue_templates" (
 			"id" TEXT PRIMARY KEY,
-			"repos_id" TEXT NOT NULL,
+			"repos_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP
 		)`,
 		`CREATE INDEX IF NOT EXISTS "idx_issue_templates_repos_id" ON "issue_templates"("repos_id")`,
 		`CREATE TABLE IF NOT EXISTS "issues" (
 			"id" TEXT PRIMARY KEY,
-			"repos_id" TEXT NOT NULL,
+			"repos_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 			"parent_id" TEXT
@@ -1381,7 +1381,7 @@ func (s *Store) migrate(ctx context.Context) error {
 		`CREATE INDEX IF NOT EXISTS "idx_issues_parent_id" ON "issues"("parent_id")`,
 		`CREATE TABLE IF NOT EXISTS "repos_keys" (
 			"id" TEXT PRIMARY KEY,
-			"repos_id" TEXT NOT NULL,
+			"repos_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 			"parent_id" TEXT
@@ -1390,7 +1390,7 @@ func (s *Store) migrate(ctx context.Context) error {
 		`CREATE INDEX IF NOT EXISTS "idx_repos_keys_parent_id" ON "repos_keys"("parent_id")`,
 		`CREATE TABLE IF NOT EXISTS "repos_labels" (
 			"id" TEXT PRIMARY KEY,
-			"repos_id" TEXT NOT NULL,
+			"repos_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 			"parent_id" TEXT
@@ -1399,21 +1399,21 @@ func (s *Store) migrate(ctx context.Context) error {
 		`CREATE INDEX IF NOT EXISTS "idx_repos_labels_parent_id" ON "repos_labels"("parent_id")`,
 		`CREATE TABLE IF NOT EXISTS "languages" (
 			"id" TEXT PRIMARY KEY,
-			"repos_id" TEXT NOT NULL,
+			"repos_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP
 		)`,
 		`CREATE INDEX IF NOT EXISTS "idx_languages_repos_id" ON "languages"("repos_id")`,
 		`CREATE TABLE IF NOT EXISTS "media" (
 			"id" TEXT PRIMARY KEY,
-			"repos_id" TEXT NOT NULL,
+			"repos_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP
 		)`,
 		`CREATE INDEX IF NOT EXISTS "idx_media_repos_id" ON "media"("repos_id")`,
 		`CREATE TABLE IF NOT EXISTS "milestones" (
 			"id" TEXT PRIMARY KEY,
-			"repos_id" TEXT NOT NULL,
+			"repos_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 			"parent_id" TEXT
@@ -1422,21 +1422,21 @@ func (s *Store) migrate(ctx context.Context) error {
 		`CREATE INDEX IF NOT EXISTS "idx_milestones_parent_id" ON "milestones"("parent_id")`,
 		`CREATE TABLE IF NOT EXISTS "mirror_sync" (
 			"id" TEXT PRIMARY KEY,
-			"repos_id" TEXT NOT NULL,
+			"repos_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP
 		)`,
 		`CREATE INDEX IF NOT EXISTS "idx_mirror_sync_repos_id" ON "mirror_sync"("repos_id")`,
 		`CREATE TABLE IF NOT EXISTS "new_pin_allowed" (
 			"id" TEXT PRIMARY KEY,
-			"repos_id" TEXT NOT NULL,
+			"repos_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP
 		)`,
 		`CREATE INDEX IF NOT EXISTS "idx_new_pin_allowed_repos_id" ON "new_pin_allowed"("repos_id")`,
 		`CREATE TABLE IF NOT EXISTS "repos_notifications" (
 			"id" TEXT PRIMARY KEY,
-			"repos_id" TEXT NOT NULL,
+			"repos_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 			"parent_id" TEXT
@@ -1445,7 +1445,7 @@ func (s *Store) migrate(ctx context.Context) error {
 		`CREATE INDEX IF NOT EXISTS "idx_repos_notifications_parent_id" ON "repos_notifications"("parent_id")`,
 		`CREATE TABLE IF NOT EXISTS "pulls" (
 			"id" TEXT PRIMARY KEY,
-			"repos_id" TEXT NOT NULL,
+			"repos_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 			"parent_id" TEXT
@@ -1454,7 +1454,7 @@ func (s *Store) migrate(ctx context.Context) error {
 		`CREATE INDEX IF NOT EXISTS "idx_pulls_parent_id" ON "pulls"("parent_id")`,
 		`CREATE TABLE IF NOT EXISTS "push_mirrors" (
 			"id" TEXT PRIMARY KEY,
-			"repos_id" TEXT NOT NULL,
+			"repos_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 			"parent_id" TEXT
@@ -1463,21 +1463,21 @@ func (s *Store) migrate(ctx context.Context) error {
 		`CREATE INDEX IF NOT EXISTS "idx_push_mirrors_parent_id" ON "push_mirrors"("parent_id")`,
 		`CREATE TABLE IF NOT EXISTS "push_mirrors_sync" (
 			"id" TEXT PRIMARY KEY,
-			"repos_id" TEXT NOT NULL,
+			"repos_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP
 		)`,
 		`CREATE INDEX IF NOT EXISTS "idx_push_mirrors_sync_repos_id" ON "push_mirrors_sync"("repos_id")`,
 		`CREATE TABLE IF NOT EXISTS "raw" (
 			"id" TEXT PRIMARY KEY,
-			"repos_id" TEXT NOT NULL,
+			"repos_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP
 		)`,
 		`CREATE INDEX IF NOT EXISTS "idx_raw_repos_id" ON "raw"("repos_id")`,
 		`CREATE TABLE IF NOT EXISTS "releases" (
 			"id" TEXT PRIMARY KEY,
-			"repos_id" TEXT NOT NULL,
+			"repos_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 			"parent_id" TEXT
@@ -1486,21 +1486,21 @@ func (s *Store) migrate(ctx context.Context) error {
 		`CREATE INDEX IF NOT EXISTS "idx_releases_parent_id" ON "releases"("parent_id")`,
 		`CREATE TABLE IF NOT EXISTS "reviewers" (
 			"id" TEXT PRIMARY KEY,
-			"repos_id" TEXT NOT NULL,
+			"repos_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP
 		)`,
 		`CREATE INDEX IF NOT EXISTS "idx_reviewers_repos_id" ON "reviewers"("repos_id")`,
 		`CREATE TABLE IF NOT EXISTS "repos_signing_key_gpg" (
 			"id" TEXT PRIMARY KEY,
-			"repos_id" TEXT NOT NULL,
+			"repos_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP
 		)`,
 		`CREATE INDEX IF NOT EXISTS "idx_repos_signing_key_gpg_repos_id" ON "repos_signing_key_gpg"("repos_id")`,
 		`CREATE TABLE IF NOT EXISTS "stargazers" (
 			"id" TEXT PRIMARY KEY,
-			"repos_id" TEXT NOT NULL,
+			"repos_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 			"parent_id" TEXT
@@ -1509,7 +1509,7 @@ func (s *Store) migrate(ctx context.Context) error {
 		`CREATE INDEX IF NOT EXISTS "idx_stargazers_parent_id" ON "stargazers"("parent_id")`,
 		`CREATE TABLE IF NOT EXISTS "statuses" (
 			"id" TEXT PRIMARY KEY,
-			"repos_id" TEXT NOT NULL,
+			"repos_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 			"parent_id" TEXT
@@ -1518,7 +1518,7 @@ func (s *Store) migrate(ctx context.Context) error {
 		`CREATE INDEX IF NOT EXISTS "idx_statuses_parent_id" ON "statuses"("parent_id")`,
 		`CREATE TABLE IF NOT EXISTS "subscribers" (
 			"id" TEXT PRIMARY KEY,
-			"repos_id" TEXT NOT NULL,
+			"repos_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 			"parent_id" TEXT
@@ -1527,28 +1527,28 @@ func (s *Store) migrate(ctx context.Context) error {
 		`CREATE INDEX IF NOT EXISTS "idx_subscribers_parent_id" ON "subscribers"("parent_id")`,
 		`CREATE TABLE IF NOT EXISTS "subscription" (
 			"id" TEXT PRIMARY KEY,
-			"repos_id" TEXT NOT NULL,
+			"repos_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP
 		)`,
 		`CREATE INDEX IF NOT EXISTS "idx_subscription_repos_id" ON "subscription"("repos_id")`,
 		`CREATE TABLE IF NOT EXISTS "sync_fork" (
 			"id" TEXT PRIMARY KEY,
-			"repos_id" TEXT NOT NULL,
+			"repos_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP
 		)`,
 		`CREATE INDEX IF NOT EXISTS "idx_sync_fork_repos_id" ON "sync_fork"("repos_id")`,
 		`CREATE TABLE IF NOT EXISTS "tag_protections" (
 			"id" TEXT PRIMARY KEY,
-			"repos_id" TEXT NOT NULL,
+			"repos_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP
 		)`,
 		`CREATE INDEX IF NOT EXISTS "idx_tag_protections_repos_id" ON "tag_protections"("repos_id")`,
 		`CREATE TABLE IF NOT EXISTS "tags" (
 			"id" TEXT PRIMARY KEY,
-			"repos_id" TEXT NOT NULL,
+			"repos_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 			"parent_id" TEXT
@@ -1557,14 +1557,14 @@ func (s *Store) migrate(ctx context.Context) error {
 		`CREATE INDEX IF NOT EXISTS "idx_tags_parent_id" ON "tags"("parent_id")`,
 		`CREATE TABLE IF NOT EXISTS "repos_teams" (
 			"id" TEXT PRIMARY KEY,
-			"repos_id" TEXT NOT NULL,
+			"repos_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP
 		)`,
 		`CREATE INDEX IF NOT EXISTS "idx_repos_teams_repos_id" ON "repos_teams"("repos_id")`,
 		`CREATE TABLE IF NOT EXISTS "times" (
 			"id" TEXT PRIMARY KEY,
-			"repos_id" TEXT NOT NULL,
+			"repos_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 			"parent_id" TEXT
@@ -1573,7 +1573,7 @@ func (s *Store) migrate(ctx context.Context) error {
 		`CREATE INDEX IF NOT EXISTS "idx_times_parent_id" ON "times"("parent_id")`,
 		`CREATE TABLE IF NOT EXISTS "repos_topics" (
 			"id" TEXT PRIMARY KEY,
-			"repos_id" TEXT NOT NULL,
+			"repos_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 			"parent_id" TEXT
@@ -1582,14 +1582,14 @@ func (s *Store) migrate(ctx context.Context) error {
 		`CREATE INDEX IF NOT EXISTS "idx_repos_topics_parent_id" ON "repos_topics"("parent_id")`,
 		`CREATE TABLE IF NOT EXISTS "transfer" (
 			"id" TEXT PRIMARY KEY,
-			"repos_id" TEXT NOT NULL,
+			"repos_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP
 		)`,
 		`CREATE INDEX IF NOT EXISTS "idx_transfer_repos_id" ON "transfer"("repos_id")`,
 		`CREATE TABLE IF NOT EXISTS "wiki" (
 			"id" TEXT PRIMARY KEY,
-			"repos_id" TEXT NOT NULL,
+			"repos_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 			"parent_id" TEXT
@@ -1728,21 +1728,21 @@ func (s *Store) migrate(ctx context.Context) error {
 		END`,
 		`CREATE TABLE IF NOT EXISTS "teams_activities" (
 			"id" TEXT PRIMARY KEY,
-			"teams_id" TEXT NOT NULL,
+			"teams_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP
 		)`,
 		`CREATE INDEX IF NOT EXISTS "idx_teams_activities_teams_id" ON "teams_activities"("teams_id")`,
 		`CREATE TABLE IF NOT EXISTS "teams_members" (
 			"id" TEXT PRIMARY KEY,
-			"teams_id" TEXT NOT NULL,
+			"teams_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP
 		)`,
 		`CREATE INDEX IF NOT EXISTS "idx_teams_members_teams_id" ON "teams_members"("teams_id")`,
 		`CREATE TABLE IF NOT EXISTS "teams_repos" (
 			"id" TEXT PRIMARY KEY,
-			"teams_id" TEXT NOT NULL,
+			"teams_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP
 		)`,
@@ -1931,7 +1931,7 @@ func (s *Store) migrate(ctx context.Context) error {
 		`CREATE INDEX IF NOT EXISTS "idx_users_source_id" ON "users"("source_id")`,
 		`CREATE TABLE IF NOT EXISTS "users_activities" (
 			"id" TEXT PRIMARY KEY,
-			"users_id" TEXT NOT NULL,
+			"users_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 			"parent_id" TEXT
@@ -1940,7 +1940,7 @@ func (s *Store) migrate(ctx context.Context) error {
 		`CREATE INDEX IF NOT EXISTS "idx_users_activities_parent_id" ON "users_activities"("parent_id")`,
 		`CREATE TABLE IF NOT EXISTS "followers" (
 			"id" TEXT PRIMARY KEY,
-			"users_id" TEXT NOT NULL,
+			"users_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 			"parent_id" TEXT
@@ -1949,7 +1949,7 @@ func (s *Store) migrate(ctx context.Context) error {
 		`CREATE INDEX IF NOT EXISTS "idx_followers_parent_id" ON "followers"("parent_id")`,
 		`CREATE TABLE IF NOT EXISTS "following" (
 			"id" TEXT PRIMARY KEY,
-			"users_id" TEXT NOT NULL,
+			"users_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 			"parent_id" TEXT
@@ -1958,7 +1958,7 @@ func (s *Store) migrate(ctx context.Context) error {
 		`CREATE INDEX IF NOT EXISTS "idx_following_parent_id" ON "following"("parent_id")`,
 		`CREATE TABLE IF NOT EXISTS "gpg_keys" (
 			"id" TEXT PRIMARY KEY,
-			"users_id" TEXT NOT NULL,
+			"users_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 			"parent_id" TEXT
@@ -1967,14 +1967,14 @@ func (s *Store) migrate(ctx context.Context) error {
 		`CREATE INDEX IF NOT EXISTS "idx_gpg_keys_parent_id" ON "gpg_keys"("parent_id")`,
 		`CREATE TABLE IF NOT EXISTS "heatmap" (
 			"id" TEXT PRIMARY KEY,
-			"users_id" TEXT NOT NULL,
+			"users_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP
 		)`,
 		`CREATE INDEX IF NOT EXISTS "idx_heatmap_users_id" ON "heatmap"("users_id")`,
 		`CREATE TABLE IF NOT EXISTS "users_keys" (
 			"id" TEXT PRIMARY KEY,
-			"users_id" TEXT NOT NULL,
+			"users_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 			"parent_id" TEXT
@@ -1983,7 +1983,7 @@ func (s *Store) migrate(ctx context.Context) error {
 		`CREATE INDEX IF NOT EXISTS "idx_users_keys_parent_id" ON "users_keys"("parent_id")`,
 		`CREATE TABLE IF NOT EXISTS "users_orgs" (
 			"id" TEXT PRIMARY KEY,
-			"users_id" TEXT NOT NULL,
+			"users_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 			"parent_id" TEXT
@@ -1992,7 +1992,7 @@ func (s *Store) migrate(ctx context.Context) error {
 		`CREATE INDEX IF NOT EXISTS "idx_users_orgs_parent_id" ON "users_orgs"("parent_id")`,
 		`CREATE TABLE IF NOT EXISTS "users_repos" (
 			"id" TEXT PRIMARY KEY,
-			"users_id" TEXT NOT NULL,
+			"users_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 			"parent_id" TEXT
@@ -2001,7 +2001,7 @@ func (s *Store) migrate(ctx context.Context) error {
 		`CREATE INDEX IF NOT EXISTS "idx_users_repos_parent_id" ON "users_repos"("parent_id")`,
 		`CREATE TABLE IF NOT EXISTS "starred" (
 			"id" TEXT PRIMARY KEY,
-			"users_id" TEXT NOT NULL,
+			"users_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 			"parent_id" TEXT
@@ -2010,7 +2010,7 @@ func (s *Store) migrate(ctx context.Context) error {
 		`CREATE INDEX IF NOT EXISTS "idx_starred_parent_id" ON "starred"("parent_id")`,
 		`CREATE TABLE IF NOT EXISTS "subscriptions" (
 			"id" TEXT PRIMARY KEY,
-			"users_id" TEXT NOT NULL,
+			"users_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 			"parent_id" TEXT
@@ -2019,7 +2019,7 @@ func (s *Store) migrate(ctx context.Context) error {
 		`CREATE INDEX IF NOT EXISTS "idx_subscriptions_parent_id" ON "subscriptions"("parent_id")`,
 		`CREATE TABLE IF NOT EXISTS "tokens" (
 			"id" TEXT PRIMARY KEY,
-			"users_id" TEXT NOT NULL,
+			"users_id" TEXT,
 			"data" JSON NOT NULL,
 			"synced_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 			"parent_id" TEXT
@@ -2056,6 +2056,12 @@ func (s *Store) migrate(ctx context.Context) error {
 		if current < 2 {
 			if err := s.migrateResourcesCompositeKey(ctx, conn); err != nil {
 				return fmt.Errorf("migrating resources composite key: %w", err)
+			}
+		}
+
+		if current < 3 {
+			if err := s.migrateDropTypedFkNotNull(ctx, conn); err != nil {
+				return fmt.Errorf("migrating typed fk not-null: %w", err)
 			}
 		}
 
@@ -2127,6 +2133,40 @@ func (s *Store) migrateResourcesCompositeKey(ctx context.Context, conn *sql.Conn
 	}
 	if err := rebuildResourcesFTS(ctx, conn); err != nil {
 		return fmt.Errorf("rebuilding resources_fts: %w", err)
+	}
+	return nil
+}
+
+// migrateDropTypedFkNotNull drops all typed projection tables whose FK columns
+// were declared NOT NULL, preventing dependent-resource sync from landing
+// parent_id when orgs_id/repos_id/etc. is absent from the injected JSON.
+// Tables are recreated with nullable FK columns by the CREATE TABLE IF NOT
+// EXISTS statements that run immediately after this migration (v3 bump).
+// The data was only a projection of the generic resources table; re-syncing
+// repopulates it with the corrected schema.
+func (s *Store) migrateDropTypedFkNotNull(ctx context.Context, conn *sql.Conn) error {
+	tables := []string{
+		"org_repos", "orgs_actions", "orgs_activities", "orgs_avatar", "block",
+		"orgs_hooks", "orgs_labels", "list_blocked", "orgs_members", "public_members",
+		"quota", "rename", "orgs_repos", "orgs_teams", "unblock", "files",
+		"repos_actions", "repos_activities", "archive", "assignees", "repos_avatar",
+		"branch_protections", "branches", "collaborators", "commits", "compare",
+		"contents", "convert", "diffpatch", "editorconfig", "flags", "forks",
+		"generate", "git", "repos_hooks", "issue_config", "issue_templates", "issues",
+		"repos_keys", "repos_labels", "languages", "media", "milestones",
+		"mirror_sync", "new_pin_allowed", "repos_notifications", "pulls",
+		"push_mirrors", "push_mirrors_sync", "raw", "releases", "reviewers",
+		"repos_signing_key_gpg", "stargazers", "statuses", "subscribers",
+		"subscription", "sync_fork", "tag_protections", "tags", "repos_teams",
+		"times", "repos_topics", "transfer", "wiki", "teams_activities",
+		"teams_members", "teams_repos", "users_activities", "followers", "following",
+		"gpg_keys", "heatmap", "users_keys", "users_orgs", "users_repos",
+		"starred", "subscriptions", "tokens",
+	}
+	for _, t := range tables {
+		if _, err := conn.ExecContext(ctx, fmt.Sprintf(`DROP TABLE IF EXISTS "%s"`, t)); err != nil {
+			return fmt.Errorf("dropping %s: %w", t, err)
+		}
 	}
 	return nil
 }

@@ -109,7 +109,7 @@ func newNovelIssueDashboardCmd(flags *rootFlags) *cobra.Command {
 	cmd.Flags().StringVar(&assignee, "assignee", "@me", `Filter by assignee; use "@me" for self`)
 	cmd.Flags().StringVar(&label, "label", "", "Filter by label name")
 	cmd.Flags().StringVar(&state, "state", "open", "Issue state: open, closed, or all")
-	cmd.Flags().BoolVar(&allHosts, "all-hosts", false, "Aggregate issues across all configured host profiles")
+	cmd.Flags().BoolVar(&allHosts, "all-hosts", false, "Aggregate issues across all configured host profiles (not yet implemented)")
 	cmd.Flags().BoolVar(&allRepos, "all-repos", false, "Show issues across all accessible repos (default when --assignee is set)")
 	_ = allHosts // multi-host aggregation requires SQLite sync; single-host API used otherwise
 	_ = allRepos // cross-repo search uses /repos/issues/search regardless
