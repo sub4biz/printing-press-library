@@ -5114,6 +5114,80 @@
       }
     },
     {
+      "name": "gl-inet",
+      "category": "devices",
+      "api": "GL.iNet",
+      "description": "The first maintained CLI for GL.iNet travel routers — named config profiles, travel macros, and version-aware diagnostics no other GL.iNet tool ships.",
+      "search_terms": [
+        "gl-inet",
+        "GL.iNet",
+        "gl-inet-pp-cli",
+        "The first maintained CLI for GL.iNet travel routers — named config profiles, travel macros, and version-aware diagnostics no other GL.iNet tool ships.",
+        "Named config profile capture",
+        "snapshot save",
+        "Capture your whole router config as a named, reusable profile.",
+        "Version+model-gated restore",
+        "snapshot apply",
+        "Restore a saved profile, with a safety check that it matches this device.",
+        "Option-level config diff",
+        "snapshot diff",
+        "See exactly which settings a venue changed vs your standard config.",
+        "WiFi region diagnose + fix",
+        "wifi region diagnose",
+        "Find out why a foreign network is invisible and fix the regulatory domain in one command.",
+        "Venue onboarding macro",
+        "venue connect",
+        "One command to get online at a new venue: scan, region-check, join, and prep for captive portals.",
+        "VPN toggle + egress verify",
+        "vpn toggle",
+        "Start a VPN tunnel, arm the kill-switch, and confirm your public IP actually changed.",
+        "Connection fidelity / leak check",
+        "vpn verify",
+        "Verify the VPN is up and your connection isn't leaking: egress country, DNS leaks, and STUN/UDP (WebRTC-style) leaks.",
+        "Connectivity troubleshooter",
+        "troubleshoot",
+        "Diagnose why the router has no internet and get the exact fix command.",
+        "Source-uplink quality + improvements",
+        "uplink",
+        "Diagnose a weak/slow venue WiFi uplink and get ranked ways to improve it.",
+        "Doctor / capability probe",
+        "doctor",
+        "Report this router's model, firmware, OpenWrt/LuCI versions, reachable surfaces, and per-feature availability.",
+        "Current-config summary",
+        "config summary",
+        "A structured, per-subsystem report of the router's current configuration.",
+        "Config option search",
+        "config find",
+        "Find any config option anywhere across the whole router config tree.",
+        "Raw passthrough escape hatch",
+        "rpc call",
+        "Call any GL RPC module/function or any UCI option directly.",
+        "WAN source switch",
+        "wan mode",
+        "Switch the router's WAN source and verify it reconnected."
+      ],
+      "path": "library/devices/gl-inet",
+      "printer": "paulbockewitz",
+      "printer_name": "Paul Bockewitz",
+      "creator": {
+        "handle": "paulbockewitz",
+        "name": "Paul Bockewitz"
+      },
+      "mcp": {
+        "binary": "gl-inet-pp-mcp",
+        "transports": [
+          "stdio",
+          "http"
+        ],
+        "tool_count": 6,
+        "public_tool_count": 6,
+        "auth_type": "none",
+        "env_vars": [],
+        "mcp_ready": "full",
+        "spec_format": "internal"
+      }
+    },
+    {
       "name": "godaddy",
       "category": "developer-tools",
       "api": "GoDaddy",
@@ -9255,6 +9329,52 @@
       "path": "library/developer-tools/pangolin",
       "printer": "CarlF01",
       "printer_name": "CFinney"
+    },
+    {
+      "name": "paul-graham",
+      "category": "media-and-entertainment",
+      "api": "Paul Graham Essays",
+      "description": "Static public essay index for paulgraham.com.",
+      "search_terms": [
+        "paul-graham",
+        "Paul Graham Essays",
+        "paul-graham-pp-cli",
+        "Static public essay index for paulgraham.com.",
+        "Latest Essays",
+        "latest",
+        "Lists the newest essays from the canonical paulgraham.com/articles.html index without requiring an official API or feed.",
+        "Essay Search",
+        "search",
+        "Searches essay titles and slugs, with an optional full-text mode that fetches and scans linked essay pages.",
+        "Read Essay",
+        "read",
+        "Fetches a specific essay by slug, URL, title, or title substring and returns extracted readable text with word count and excerpt metadata.",
+        "Essay Link Extractor",
+        "links",
+        "Extracts links from an essay page so agents can inspect citations, footnotes, and outbound references.",
+        "Random Essay",
+        "random",
+        "Picks a random essay from the live index, with deterministic seeding for reproducible agent workflows."
+      ],
+      "path": "library/media-and-entertainment/paul-graham",
+      "printer": "debgotwired",
+      "printer_name": "Deb Mukherjee",
+      "creator": {
+        "handle": "debgotwired",
+        "name": "Deb Mukherjee"
+      },
+      "mcp": {
+        "binary": "paul-graham-pp-mcp",
+        "transports": [
+          "stdio"
+        ],
+        "tool_count": 1,
+        "public_tool_count": 1,
+        "auth_type": "none",
+        "env_vars": [],
+        "mcp_ready": "full",
+        "spec_format": "openapi3"
+      }
     },
     {
       "name": "pcgs",
