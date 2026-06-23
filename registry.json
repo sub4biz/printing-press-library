@@ -1023,9 +1023,9 @@
       "path": "library/marketing/amplitude",
       "release": {
         "cli_name": "amplitude-pp-cli",
-        "version": "",
-        "released_at": "",
-        "source_commit": ""
+        "version": "2026.6.1",
+        "released_at": "2026-06-23T17:15:28Z",
+        "source_commit": "8014c77168bae01d6f48599c2eec4b2f13be1cad"
       },
       "printer": "debgotwired",
       "printer_name": "Deb Mukherjee",
@@ -7420,6 +7420,62 @@
         ],
         "mcp_ready": "full",
         "spec_format": "openapi3"
+      }
+    },
+    {
+      "name": "isitagentready",
+      "category": "developer-tools",
+      "api": "Is It Agent Ready",
+      "description": "The terminal scanner for AI-agent readiness: every check the web tool runs, plus copy-paste fixes, CI gating, scan history, and a local store the web UI has no answer for.",
+      "search_terms": [
+        "isitagentready",
+        "Is It Agent Ready",
+        "isitagentready-pp-cli",
+        "The terminal scanner for AI-agent readiness: every check the web tool runs, plus copy-paste fixes, CI gating, scan history, and a local store the web UI has no answer for.",
+        "CI readiness gate",
+        "gate",
+        "Fail a build when a site drops below a target readiness level or when a previously-passing check regresses.",
+        "Cross-site open-advice backlog",
+        "open-advice",
+        "List every still-failing check across all your scanned sites with its fix prompt, so you see exactly what is left to do.",
+        "Score-over-time history",
+        "history",
+        "Show a site's readiness level across every past scan and flag which checks flipped pass/fail between scans.",
+        "Two-scan regression diff",
+        "diff",
+        "Diff two scans of a site (default: the latest two) into a per-check regressed/fixed/unchanged table plus the level delta.",
+        "Competitor standards matrix",
+        "compare",
+        "Scan several sites and print a check-by-check matrix of which agent standards each one implements, plus each site's level.",
+        "Portfolio batch scan",
+        "batch",
+        "Scan a list of URLs from a file or stdin, persist each, and print a leaderboard ranked by level or failing-check count."
+      ],
+      "path": "library/developer-tools/isitagentready",
+      "release": {
+        "cli_name": "isitagentready-pp-cli",
+        "version": "",
+        "released_at": "",
+        "source_commit": ""
+      },
+      "printer": "bobeglz",
+      "printer_name": "bobe",
+      "creator": {
+        "handle": "bobeglz",
+        "name": "bobe"
+      },
+      "mcp": {
+        "binary": "isitagentready-pp-mcp",
+        "transports": [
+          "stdio",
+          "http"
+        ],
+        "tool_count": 1,
+        "public_tool_count": 1,
+        "auth_type": "none",
+        "env_vars": [],
+        "mcp_ready": "full",
+        "spec_format": "internal"
       }
     },
     {
