@@ -76,12 +76,23 @@ jobs:
             done
           }
 
+          check_skill_guard_literals() {
+            local dir="$1"
+            python3 .github/scripts/verify-skill/check_skill_guard_literals.py "$dir/SKILL.md"
+          }
+
           verify_dir() {
             local dir="$1"
             if [ ! -f "$dir/SKILL.md" ]; then return; fi
             if [ ! -d "$dir/internal/cli" ]; then return; fi
             CLI_COUNT=$((CLI_COUNT + 1))
             echo "::group::$dir"
+            check_skill_guard_literals "$dir"
+            RC=$?
+            if [ "$RC" -ne 0 ]; then
+              FAIL=$((FAIL + 1))
+              echo "::error title=SKILL guard literal check failed::$dir"
+            fi
             python3 "$VERIFIER" --dir "$dir"
             RC=$?
             if [ "$RC" -ne 0 ]; then
@@ -135,6 +146,7 @@ jobs:
           done
 
           if [ "$FULL_SCAN" -eq 1 ]; then
+            run_verifier_tests
             echo "Running verifier against every CLI with a SKILL.md."
             run_all
           else

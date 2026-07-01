@@ -27,6 +27,9 @@ from verify_skill import (  # noqa: E402
     _cli_invocation_from_tokens,
     _extract_function_body,
     _extract_prose_invocations,
+    _unquoted_shell_variables,
+    check_shell_var_quotes,
+    Report,
 )
 
 
@@ -451,6 +454,46 @@ func newGetCmd() *cobra.Command {
             )
             self.assertEqual(["item-123"], positional)
             self.assertEqual(["--filter"], flags)
+
+
+class TestShellVarQuotes(unittest.TestCase):
+    def test_unquoted_shell_variables_handles_bare_and_braced_forms(self):
+        line = 'tool --bare $TOKEN --braced ${CONFIG_PATH} --quoted "$SAFE" --single \'$IGNORED\''
+
+        self.assertEqual(["$TOKEN", "${CONFIG_PATH}"], _unquoted_shell_variables(line))
+
+    def test_unquoted_shell_variables_tracks_quote_state_and_escapes(self):
+        line = r'tool "$QUOTED" \$ESCAPED ${UNQUOTED} "still $SAFE" $BARE # $COMMENTED'
+
+        self.assertEqual(["${UNQUOTED}", "$BARE"], _unquoted_shell_variables(line))
+
+    def test_check_shell_var_quotes_reports_skill_and_readme_evidence(self):
+        with tempfile.TemporaryDirectory() as td:
+            cli_dir = Path(td)
+            skill = cli_dir / "SKILL.md"
+            readme = cli_dir / "README.md"
+            skill.write_text(
+                "# Fixture\n\n```bash\nfixture-pp-cli auth --token $TOKEN --safe \"$SAFE\"\n```\n",
+                encoding="utf-8",
+            )
+            readme.write_text(
+                "# Fixture\n\n```bash\nfixture-pp-cli export --out ${OUT_PATH}\n```\n",
+                encoding="utf-8",
+            )
+            report = Report(cli_dir=str(cli_dir), skill_path=str(skill))
+
+            check_shell_var_quotes([skill, readme], report)
+
+            details = {(finding.command, finding.detail) for finding in report.findings}
+            self.assertEqual(2, len(report.findings))
+            self.assertIn(
+                ("(file: SKILL.md)", "$TOKEN is expanded in a bash code block without double quotes"),
+                details,
+            )
+            self.assertIn(
+                ("(file: README.md)", "${OUT_PATH} is expanded in a bash code block without double quotes"),
+                details,
+            )
 
 
 class UTF8ReadTest(unittest.TestCase):
